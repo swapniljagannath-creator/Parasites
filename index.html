@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parasites — Speak. Connect. Fight Back.</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0f0e0d;--paper:#f5f2ec;--accent:#c0392b;--accent2:#e67e22;
+  --muted:#7a7570;--surface:#ede9e1;--border:#d4cfc6;
+  --green:#1a6b4a;--blue:#1a4b8c;--purple:#5b2d8e;
+  --white:#ffffff;
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.6;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+button{font-family:'DM Sans',sans-serif;cursor:pointer}
+input,textarea,select{font-family:'DM Sans',sans-serif}
+
+/* ====== NAV ====== */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:60px;border-bottom:2px solid var(--ink);background:var(--paper);position:sticky;top:0;z-index:200}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:0.04em;color:var(--accent)}
+.logo span{color:var(--ink)}
+.nav-links{display:flex;gap:1.5rem;list-style:none;align-items:center}
+.nav-links a{font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.2s;padding:0.3rem 0}
+.nav-links a:hover,.nav-links a.active{color:var(--accent)}
+.nav-links a.active{border-bottom:2px solid var(--accent)}
+.nav-cta{background:var(--ink)!important;color:var(--paper)!important;padding:0.4rem 1rem!important;border-bottom:none!important}
+.nav-cta:hover{background:var(--accent)!important}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--ink);transition:all 0.3s}
+@media(max-width:768px){
+  .nav-links{display:none;position:fixed;top:60px;left:0;right:0;background:var(--paper);border-bottom:2px solid var(--ink);flex-direction:column;padding:1.5rem 2rem;gap:1rem;z-index:199}
+  .nav-links.open{display:flex}
+  .hamburger{display:flex}
+  .logo{font-size:1.6rem}
+}
+
+/* ====== PAGES ====== */
+.page{display:none}
+.page.active{display:block}
+
+/* ====== SHARED COMPONENTS ====== */
+.section-wrap{max-width:1200px;margin:0 auto;padding:0 2rem}
+.tag-pill{display:inline-block;font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:20px}
+.tag-legal{background:#dce8f7;color:#0c447c}
+.tag-harass{background:#fde8e8;color:#a32d2d}
+.tag-housing{background:#ede0f5;color:#4a1b7e}
+.tag-labor{background:#dff2ea;color:#085041}
+.tag-consumer{background:#fef0d9;color:#633806}
+.tag-police{background:#e8e8e8;color:#333}
+.tag-womens{background:#fde8f3;color:#72243e}
+.tag-dalit{background:#ffe8d6;color:#7a2e00}
+.tag-rtl{background:#e0f0ff;color:#003380}
+
+.btn{display:inline-block;padding:0.7rem 1.5rem;font-size:0.85rem;font-weight:500;letter-spacing:0.04em;border:none;cursor:pointer;transition:all 0.2s}
+.btn-red{background:var(--accent);color:white}.btn-red:hover{background:#a93226}
+.btn-dark{background:var(--ink);color:var(--paper)}.btn-dark:hover{background:#333}
+.btn-outline{background:transparent;color:var(--ink);border:2px solid var(--ink)}.btn-outline:hover{background:var(--ink);color:var(--paper)}
+.btn-sm{padding:0.45rem 1rem;font-size:0.78rem}
+.btn-xs{padding:0.3rem 0.7rem;font-size:0.72rem}
+
+/* form elements */
+.form-group{margin-bottom:1.2rem}
+.form-label{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.4rem}
+.form-input{width:100%;border:1.5px solid var(--border);padding:0.7rem 1rem;font-size:0.9rem;color:var(--ink);outline:none;background:white;border-radius:2px;transition:border-color 0.2s}
+.form-input:focus{border-color:var(--ink)}
+.form-textarea{resize:vertical;min-height:100px}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center}
+
+/* ====== TOAST ====== */
+#toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ink);color:white;padding:0.9rem 1.4rem;border-left:4px solid var(--green);font-size:0.85rem;z-index:999;display:none;max-width:300px;line-height:1.5;animation:slideIn 0.3s ease}
+@keyframes slideIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ====== MODAL ====== */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:500;align-items:center;justify-content:center;padding:1rem}
+.modal-backdrop.open{display:flex}
+.modal-box{background:var(--paper);width:100%;max-width:540px;max-height:90vh;overflow-y:auto;border:2px solid var(--ink)}
+.modal-hdr{padding:1.2rem 1.5rem;border-bottom:2px solid var(--ink);display:flex;justify-content:space-between;align-items:center}
+.modal-hdr h2{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.04em}
+.modal-close{background:none;border:none;font-size:1.4rem;color:var(--muted);line-height:1}
+.modal-bdy{padding:1.5rem}
+
+
+/* ========================
+   HOME PAGE
+======================== */
+.hero{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 60px);border-bottom:2px solid var(--ink)}
+.hero-left{padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:center;border-right:2px solid var(--ink)}
+.eyebrow{font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.5rem}
+.eyebrow::before{content:'';width:1.8rem;height:2px;background:var(--accent);display:block}
+h1.hero-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,6vw,6rem);line-height:0.92;letter-spacing:0.02em;margin-bottom:1.5rem}
+.hero-h1 .red{color:var(--accent)}
+.hero-desc{font-size:1.05rem;color:var(--muted);max-width:440px;margin-bottom:2rem;font-weight:300;line-height:1.7}
+.hero-btns{display:flex;gap:0.8rem;flex-wrap:wrap}
+.hero-right{background:var(--ink);padding:2rem;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;position:relative}
+.bg-word{font-family:'Bebas Neue',sans-serif;font-size:11rem;line-height:1;color:rgba(255,255,255,0.03);position:absolute;top:0;left:-0.5rem;pointer-events:none}
+.live-label{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent2);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--accent2);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.feed-item{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);padding:1rem;margin-bottom:0.6rem;cursor:pointer;transition:background 0.2s}
+.feed-item:hover{background:rgba(255,255,255,0.09)}
+.feed-itag{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.18rem 0.5rem;border-radius:20px;margin-bottom:0.5rem;display:inline-block}
+.fi-legal{background:rgba(26,75,140,0.3);color:#7eb3ff}
+.fi-har{background:rgba(192,57,43,0.35);color:#ff8a7a}
+.fi-con{background:rgba(230,126,34,0.3);color:#ffc07a}
+.fi-lab{background:rgba(26,107,74,0.3);color:#7acca8}
+.feed-item h4{color:white;font-size:0.9rem;font-weight:400;line-height:1.4;margin-bottom:0.3rem}
+.feed-item-meta{font-size:0.72rem;color:rgba(255,255,255,0.3);display:flex;gap:0.8rem}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:2px solid var(--ink)}
+.stat-box{padding:1.8rem 2rem;border-right:1px solid var(--border);text-align:center}
+.stat-box:last-child{border-right:none}
+.stat-n{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--accent);line-height:1}
+.stat-l{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-top:0.2rem}
+.home-cats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:2px solid var(--ink)}
+.cat-card{padding:1.8rem;border-right:1px solid var(--border);border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.2s}
+.cat-card:nth-child(3n){border-right:none}
+.cat-card:hover{background:var(--surface)}
+.cat-n{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--border);line-height:1;margin-bottom:0.4rem}
+.cat-card h3{font-size:1.05rem;font-weight:500;margin-bottom:0.4rem}
+.cat-card p{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.8rem}
+.cat-meta{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent)}
+
+@media(max-width:768px){
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero-left{padding:2rem 1.5rem;border-right:none;border-bottom:2px solid var(--ink)}
+  .hero-right{padding:1.5rem;min-height:60vw}
+  h1.hero-h1{font-size:3.2rem}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .stat-box:nth-child(2){border-right:none}
+  .stat-box:nth-child(3){border-top:1px solid var(--border)}
+  .home-cats{grid-template-columns:1fr}
+  .cat-card{border-right:none}
+  .cat-card:nth-child(3n){border-right:none}
+}
+
+
+/* ========================
+   ARTICLES PAGE
+======================== */
+.articles-hero{background:var(--ink);padding:3rem 2rem;border-bottom:2px solid var(--ink)}
+.articles-hero h1{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--paper);letter-spacing:0.04em;margin-bottom:0.4rem}
+.articles-hero p{color:rgba(255,255,255,0.45);font-size:0.9rem;max-width:500px}
+.articles-filter{display:flex;gap:0.5rem;flex-wrap:wrap;padding:1.2rem 2rem;border-bottom:1px solid var(--border);background:var(--surface)}
+.filter-btn{padding:0.35rem 0.9rem;font-size:0.78rem;font-weight:500;border:1.5px solid var(--border);background:white;cursor:pointer;border-radius:20px;transition:all 0.2s}
+.filter-btn.active,.filter-btn:hover{background:var(--ink);color:white;border-color:var(--ink)}
+.articles-layout{display:grid;grid-template-columns:2fr 1fr;gap:0;border-bottom:2px solid var(--ink)}
+.articles-main{padding:2rem;border-right:1px solid var(--border)}
+.articles-sidebar{padding:1.5rem}
+.article-card-big{border-bottom:1px solid var(--border);padding-bottom:2rem;margin-bottom:2rem;cursor:pointer}
+.article-card-big:last-child{border-bottom:none}
+.art-tag{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.6rem}
+.art-title-lg{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.03em;line-height:1.1;margin-bottom:0.7rem;cursor:pointer}
+.art-title-lg:hover{color:var(--accent)}
+.art-excerpt{font-size:0.88rem;color:var(--muted);line-height:1.65;margin-bottom:1rem}
+.art-meta{font-size:0.75rem;color:var(--muted);display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
+.art-author{font-weight:500;color:var(--ink)}
+.art-views{color:var(--accent)}
+.sidebar-section{margin-bottom:2rem}
+.sidebar-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.04em;border-bottom:2px solid var(--ink);padding-bottom:0.4rem;margin-bottom:1rem}
+.sidebar-item{padding:0.8rem 0;border-bottom:1px solid var(--border);cursor:pointer}
+.sidebar-item:last-child{border-bottom:none}
+.sidebar-item h4{font-size:0.88rem;font-weight:500;margin-bottom:0.2rem;line-height:1.4}
+.sidebar-item h4:hover{color:var(--accent)}
+.sidebar-item p{font-size:0.75rem;color:var(--muted)}
+.write-cta{background:var(--accent);color:white;padding:1.2rem;margin-bottom:1.5rem}
+.write-cta h3{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;margin-bottom:0.4rem}
+.write-cta p{font-size:0.82rem;line-height:1.5;opacity:0.85;margin-bottom:1rem}
+
+/* SINGLE ARTICLE */
+.article-single{max-width:760px;margin:0 auto;padding:2.5rem 2rem}
+.art-single-tag{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem}
+.art-single-tag::before{content:'';width:2rem;height:2px;background:var(--accent);display:block}
+.art-single-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,5vw,3.5rem);line-height:1;letter-spacing:0.02em;margin-bottom:1.2rem}
+.art-byline{display:flex;align-items:center;gap:1rem;padding:1rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:2rem}
+.art-avatar{width:40px;height:40px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;color:white;font-weight:500;font-size:0.85rem;flex-shrink:0}
+.art-byline-text h4{font-size:0.9rem;font-weight:500}
+.art-byline-text p{font-size:0.78rem;color:var(--muted)}
+.art-body p{font-size:1rem;line-height:1.8;margin-bottom:1.4rem;color:#2a2825}
+.art-body h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.04em;margin:2rem 0 0.8rem}
+.art-body blockquote{border-left:3px solid var(--accent);padding:0.8rem 1.2rem;margin:1.5rem 0;background:var(--surface)}
+.art-body blockquote p{font-style:italic;color:var(--muted);margin:0}
+.art-body .callout{background:var(--ink);color:white;padding:1.2rem 1.5rem;margin:1.5rem 0}
+.art-body .callout h3{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.04em;margin-bottom:0.4rem;color:var(--accent2)}
+.art-body .callout p{color:rgba(255,255,255,0.7);font-size:0.88rem;margin:0;line-height:1.55}
+.art-body ul{padding-left:1.4rem;margin-bottom:1.4rem}
+.art-body li{font-size:0.95rem;line-height:1.7;margin-bottom:0.4rem;color:#2a2825}
+.art-share{display:flex;gap:0.8rem;margin-top:2.5rem;padding-top:1.5rem;border-top:2px solid var(--ink);flex-wrap:wrap}
+
+@media(max-width:768px){
+  .articles-layout{grid-template-columns:1fr}
+  .articles-main{border-right:none;padding:1.5rem}
+  .articles-sidebar{border-top:2px solid var(--ink);padding:1.5rem}
+  .art-single-h1{font-size:2.2rem}
+  .article-single{padding:1.5rem 1rem}
+}
+
+
+/* ========================
+   EXPERTS PAGE
+======================== */
+.experts-hero{display:grid;grid-template-columns:1fr 1fr;border-bottom:2px solid var(--ink)}
+.exp-hero-left{background:var(--ink);padding:3rem 2.5rem;color:white}
+.exp-hero-left h1{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;letter-spacing:0.04em;line-height:1;margin-bottom:1rem;color:var(--paper)}
+.exp-hero-left p{color:rgba(255,255,255,0.5);font-size:0.9rem;line-height:1.65;margin-bottom:1.5rem}
+.exp-hero-right{background:var(--surface);padding:2.5rem}
+.exp-search{display:flex;gap:0.5rem;margin-bottom:1.2rem}
+.exp-search input{flex:1;border:2px solid var(--ink);padding:0.8rem 1rem;font-size:0.95rem;outline:none;background:white}
+.exp-search button{background:var(--ink);color:white;border:none;padding:0 1.5rem;font-size:0.85rem;font-weight:500;cursor:pointer}
+.exp-type-tabs{display:flex;gap:0.4rem;flex-wrap:wrap}
+.exp-tab{padding:0.35rem 0.8rem;font-size:0.78rem;border:1.5px solid var(--border);background:white;cursor:pointer;border-radius:20px;font-weight:500;transition:all 0.2s;white-space:nowrap}
+.exp-tab.active,.exp-tab:hover{background:var(--ink);color:white;border-color:var(--ink)}
+.experts-grid-section{padding:2rem}
+.experts-type-header{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.04em;margin-bottom:0.3rem;padding-bottom:0.5rem;border-bottom:2px solid var(--ink)}
+.experts-subhead{font-size:0.82rem;color:var(--muted);margin-bottom:1.5rem}
+.exp-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-bottom:3rem}
+.exp-card{background:white;border:1px solid var(--border);padding:1.4rem;cursor:pointer;transition:all 0.2s}
+.exp-card:hover{border-color:var(--ink);transform:translateY(-2px)}
+.exp-card-top{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1rem}
+.exp-avatar{width:52px;height:52px;border-radius:2px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;border:1px solid var(--border)}
+.exp-name{font-size:1rem;font-weight:500;line-height:1.3}
+.exp-type-badge{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent2);margin-top:0.2rem}
+.exp-avail{font-size:0.72rem;margin-top:0.3rem;display:flex;align-items:center;gap:0.3rem}
+.dot-green{width:6px;height:6px;border-radius:50%;background:#27ae60;display:inline-block}
+.dot-yellow{width:6px;height:6px;border-radius:50%;background:#f39c12;display:inline-block}
+.exp-bio{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.8rem}
+.exp-tags{display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.8rem}
+.exp-tag{font-size:0.68rem;padding:0.15rem 0.5rem;background:var(--surface);border:1px solid var(--border);border-radius:20px;color:var(--muted)}
+.exp-card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:0.8rem;border-top:1px solid var(--border)}
+.exp-rating{font-size:0.78rem;font-weight:500;color:var(--ink)}
+.exp-fee{font-size:0.75rem;color:var(--green);font-weight:500}
+.exp-cta{font-size:0.75rem;font-weight:500;color:var(--accent);letter-spacing:0.04em}
+
+@media(max-width:768px){
+  .experts-hero{grid-template-columns:1fr}
+  .exp-hero-left{padding:2rem 1.5rem}
+  .exp-hero-right{padding:1.5rem}
+  .experts-grid-section{padding:1.5rem}
+  .exp-search{flex-direction:column}
+  .exp-search button{padding:0.7rem}
+}
+
+
+/* ========================
+   POLLING PAGE
+======================== */
+.polls-hero{background:var(--accent);padding:3rem 2rem;border-bottom:2px solid var(--ink)}
+.polls-hero h1{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:white;letter-spacing:0.04em;margin-bottom:0.4rem}
+.polls-hero p{color:rgba(255,255,255,0.7);font-size:0.9rem}
+.polls-layout{display:grid;grid-template-columns:1fr 360px;gap:0;border-bottom:2px solid var(--ink)}
+.polls-main{padding:2rem;border-right:1px solid var(--border)}
+.polls-sidebar{padding:1.5rem}
+.poll-card{background:white;border:1px solid var(--border);margin-bottom:1.2rem;overflow:hidden}
+.poll-header{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.poll-title{font-size:1.05rem;font-weight:500;line-height:1.4;flex:1}
+.poll-status{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap}
+.poll-open{color:var(--green)}
+.poll-closed{color:var(--muted)}
+.poll-body{padding:1.2rem 1.5rem}
+.poll-option{margin-bottom:0.7rem;cursor:pointer}
+.poll-opt-label{display:flex;justify-content:space-between;font-size:0.88rem;margin-bottom:0.3rem}
+.poll-bar-wrap{height:8px;background:var(--surface);border-radius:4px;overflow:hidden}
+.poll-bar{height:100%;border-radius:4px;background:var(--accent);transition:width 0.4s}
+.poll-bar.voted{background:var(--green)}
+.poll-bar.neutral{background:var(--border)}
+.poll-vote-btns{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1rem}
+.poll-footer{padding:0.8rem 1.5rem;background:var(--surface);border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:0.78rem;color:var(--muted)}
+.create-poll-form{background:white;border:1.5px solid var(--ink);padding:1.5rem;margin-bottom:1.5rem}
+.create-poll-form h3{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.04em;margin-bottom:1rem}
+.poll-opts-input{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.8rem}
+.poll-opt-input-row{display:flex;gap:0.5rem}
+.poll-opt-input-row input{flex:1}
+.add-opt-btn{font-size:0.8rem;color:var(--accent);cursor:pointer;font-weight:500;padding:0.3rem 0}
+.trending-polls .sidebar-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;border-bottom:2px solid var(--ink);padding-bottom:0.4rem;margin-bottom:1rem}
+.trending-item{padding:0.8rem 0;border-bottom:1px solid var(--border);cursor:pointer}
+.trending-item:last-child{border-bottom:none}
+.trending-item h4{font-size:0.88rem;font-weight:500;margin-bottom:0.2rem;line-height:1.3}
+.trending-item h4:hover{color:var(--accent)}
+.trending-item p{font-size:0.75rem;color:var(--muted)}
+
+@media(max-width:768px){
+  .polls-layout{grid-template-columns:1fr}
+  .polls-main{border-right:none;padding:1.5rem}
+  .polls-sidebar{border-top:2px solid var(--ink);padding:1.5rem}
+}
+
+
+/* ========================
+   FORUM PAGE
+======================== */
+.forum-hero{padding:2.5rem 2rem;border-bottom:2px solid var(--ink);background:var(--surface)}
+.forum-hero h1{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:0.04em;margin-bottom:0.4rem}
+.forum-hero p{font-size:0.88rem;color:var(--muted);max-width:500px}
+.forum-layout{display:grid;grid-template-columns:220px 1fr;min-height:600px;border-bottom:2px solid var(--ink)}
+.forum-sidebar{border-right:2px solid var(--ink);padding:1.2rem}
+.forum-sidebar h4{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:0.7rem;margin-top:1.2rem}
+.forum-sidebar h4:first-child{margin-top:0}
+.forum-cat-item{padding:0.5rem 0.6rem;font-size:0.85rem;cursor:pointer;border-radius:2px;display:flex;align-items:center;justify-content:space-between;margin-bottom:0.2rem;transition:background 0.15s}
+.forum-cat-item:hover,.forum-cat-item.active{background:var(--surface)}
+.forum-cat-item.active{font-weight:500;color:var(--accent)}
+.forum-cat-count{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--muted)}
+.forum-main{padding:0}
+.forum-topbar{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;border-bottom:1px solid var(--border);gap:1rem;flex-wrap:wrap}
+.forum-sort{display:flex;gap:0.4rem}
+.sort-btn{padding:0.3rem 0.7rem;font-size:0.75rem;border:1px solid var(--border);background:white;cursor:pointer;border-radius:20px}
+.sort-btn.active{background:var(--ink);color:white;border-color:var(--ink)}
+.thread-list{padding:0}
+.thread-item{display:grid;grid-template-columns:auto 1fr auto;gap:1rem;padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);cursor:pointer;align-items:start;transition:background 0.15s}
+.thread-item:hover{background:var(--surface)}
+.thread-votes{display:flex;flex-direction:column;align-items:center;gap:0.3rem;min-width:40px}
+.vote-up,.vote-down{background:none;border:1px solid var(--border);width:28px;height:22px;cursor:pointer;font-size:0.7rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.vote-up:hover{background:var(--green);color:white;border-color:var(--green)}
+.vote-down:hover{background:var(--accent);color:white;border-color:var(--accent)}
+.vote-count{font-family:'DM Mono',monospace;font-size:0.75rem;font-weight:500}
+.thread-body h3{font-size:0.95rem;font-weight:500;line-height:1.4;margin-bottom:0.4rem}
+.thread-body h3:hover{color:var(--accent)}
+.thread-preview{font-size:0.82rem;color:var(--muted);line-height:1.55;margin-bottom:0.5rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.thread-tags{display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.4rem}
+.thread-meta{font-size:0.72rem;color:var(--muted);display:flex;gap:0.8rem;flex-wrap:wrap}
+.thread-meta .urgent{color:var(--accent);font-weight:500}
+.thread-stats{display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;min-width:70px}
+.thread-replies{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);white-space:nowrap}
+.thread-views{font-size:0.7rem;color:var(--muted);white-space:nowrap}
+.pinned-badge{font-size:0.65rem;background:#f39c12;color:white;padding:0.15rem 0.4rem;border-radius:2px;margin-right:0.4rem}
+.expert-verified{font-size:0.68rem;background:#dff2ea;color:var(--green);padding:0.15rem 0.45rem;border-radius:20px;font-weight:500}
+/* Thread Detail */
+.thread-detail{padding:2rem}
+.thread-detail-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.03em;line-height:1.1;margin-bottom:1rem}
+.thread-op{background:white;border:1px solid var(--border);padding:1.5rem;margin-bottom:1.5rem}
+.thread-op-meta{display:flex;align-items:center;gap:0.8rem;margin-bottom:1rem;flex-wrap:wrap}
+.op-avatar{width:36px;height:36px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;color:white;font-size:0.8rem;font-weight:500;flex-shrink:0}
+.op-name{font-weight:500;font-size:0.9rem}
+.op-time{font-size:0.75rem;color:var(--muted)}
+.op-body{font-size:0.92rem;line-height:1.75;color:#2a2825}
+.op-actions{display:flex;gap:0.8rem;margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--border);flex-wrap:wrap}
+.op-action{font-size:0.75rem;font-weight:500;color:var(--muted);cursor:pointer;padding:0.3rem 0}
+.op-action:hover{color:var(--ink)}
+.reply-item{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);display:grid;grid-template-columns:36px 1fr;gap:1rem}
+.reply-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:500;flex-shrink:0}
+.reply-expert{background:var(--ink);color:white}
+.reply-user{background:var(--surface);border:1px solid var(--border);color:var(--muted)}
+.reply-name{font-size:0.85rem;font-weight:500;margin-bottom:0.15rem;display:flex;align-items:center;gap:0.5rem}
+.reply-time{font-size:0.72rem;color:var(--muted);margin-bottom:0.5rem}
+.reply-text{font-size:0.88rem;line-height:1.7;color:#2a2825}
+.expert-reply-wrap{background:#f0f8f4;border-left:3px solid var(--green);padding:1rem 1.2rem;margin-bottom:1rem}
+.expert-label{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--green);margin-bottom:0.4rem;display:flex;align-items:center;gap:0.4rem}
+.reply-form{padding:1.5rem;background:var(--surface);border-top:2px solid var(--ink)}
+.reply-form h3{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.04em;margin-bottom:1rem}
+
+@media(max-width:768px){
+  .forum-layout{grid-template-columns:1fr}
+  .forum-sidebar{border-right:none;border-bottom:2px solid var(--ink);display:flex;flex-wrap:wrap;gap:0.4rem;padding:1rem}
+  .forum-sidebar h4{display:none}
+  .forum-cat-item{border:1px solid var(--border);border-radius:20px;padding:0.3rem 0.7rem;font-size:0.78rem}
+  .forum-cat-count{display:none}
+  .thread-item{grid-template-columns:auto 1fr}
+  .thread-stats{display:none}
+}
+
+
+/* ========================
+   COMMUNITY PAGE
+======================== */
+.community-hero{padding:3rem 2rem;border-bottom:2px solid var(--ink);background:var(--ink);color:white}
+.community-hero h1{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;letter-spacing:0.04em;color:var(--paper);margin-bottom:0.5rem}
+.community-hero p{color:rgba(255,255,255,0.45);font-size:0.9rem;max-width:540px}
+.community-groups-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border);border-bottom:2px solid var(--ink)}
+.group-card{background:var(--paper);padding:1.8rem;cursor:pointer;transition:background 0.2s;display:flex;flex-direction:column}
+.group-card:hover{background:var(--surface)}
+.group-icon{font-size:2rem;margin-bottom:1rem}
+.group-name{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:0.04em;margin-bottom:0.4rem}
+.group-desc{font-size:0.84rem;color:var(--muted);line-height:1.6;margin-bottom:1rem;flex:1}
+.group-meta{display:flex;gap:1rem;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:1rem}
+.group-tags{display:flex;flex-wrap:wrap;gap:0.3rem}
+/* Thread view inside community */
+.community-thread{max-width:900px;margin:0 auto;padding:2rem}
+.thread-breadcrumb{font-size:0.8rem;color:var(--muted);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.4rem}
+.thread-breadcrumb span{cursor:pointer;color:var(--accent)}
+.group-threads-wrap{display:grid;grid-template-columns:280px 1fr;gap:0;border-bottom:2px solid var(--ink)}
+.group-info-panel{border-right:2px solid var(--ink);padding:1.5rem}
+.group-info-icon{font-size:3rem;margin-bottom:0.8rem}
+.group-info-name{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.04em;margin-bottom:0.4rem}
+.group-info-desc{font-size:0.85rem;color:var(--muted);line-height:1.6;margin-bottom:1.2rem}
+.group-stats-mini{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1.2rem}
+.gsm{font-family:'DM Mono',monospace;font-size:0.75rem;display:flex;justify-content:space-between}
+.gsm span:first-child{color:var(--muted)}
+.gsm span:last-child{font-weight:500}
+.pinned-post{background:var(--surface);border-left:3px solid var(--accent2);padding:0.8rem;margin-bottom:1rem}
+.pinned-post-label{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent2);margin-bottom:0.3rem}
+.pinned-post h4{font-size:0.85rem;font-weight:500;cursor:pointer}
+.pinned-post h4:hover{color:var(--accent)}
+.group-threads-list{padding:0}
+
+@media(max-width:768px){
+  .community-groups-grid{grid-template-columns:1fr}
+  .group-threads-wrap{grid-template-columns:1fr}
+  .group-info-panel{border-right:none;border-bottom:2px solid var(--ink)}
+}
+
+</style>
+</head>
+<body>
+
+<!-- ====== NAV ====== -->
+<nav>
+  <div class="logo" onclick="goHome()" style="cursor:pointer">Para<span>sites</span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" onclick="showPage('home')" class="active" id="nav-home">Home</a></li>
+    <li><a href="#" onclick="showPage('articles')" id="nav-articles">Articles</a></li>
+    <li><a href="#" onclick="showPage('experts')" id="nav-experts">Experts</a></li>
+    <li><a href="#" onclick="showPage('polls')" id="nav-polls">Polls</a></li>
+    <li><a href="#" onclick="showPage('forum')" id="nav-forum">Forum</a></li>
+    <li><a href="#" onclick="showPage('community')" id="nav-community">Community</a></li>
+    <li><a href="#" onclick="showPage('forum');setTimeout(()=>showPostForm(),300)" class="nav-cta">+ Post Problem</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()" id="ham">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ===================== HOME ===================== -->
+<div class="page active" id="page-home">
+
+  <section class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">India's Problem Community</div>
+      <h1 class="hero-h1">Speak Up.<br><span class="red">Fight Back.</span><br>Don't Suffer Alone.</h1>
+      <p class="hero-desc">A raw, no-filter community where everyday people share real problems — harassment, legal troubles, housing issues, fraud — and get connected with lawyers, activists, and people who've been there.</p>
+      <div class="hero-btns">
+        <a class="btn btn-red" onclick="showPage('forum');setTimeout(()=>showPostForm(),300)">Post Your Problem →</a>
+        <a class="btn btn-outline" onclick="showPage('experts')">Find an Expert</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="bg-word">FIGHT</div>
+      <div class="live-label"><span class="pulse"></span> Live problems posted now</div>
+      <div class="feed-item" onclick="showPage('forum');setTimeout(()=>openThread(0),300)">
+        <div class="feed-itag fi-legal">Legal</div>
+        <h4>Landlord refusing to return ₹45,000 deposit — 8 months, Lucknow</h4>
+        <div class="feed-item-meta"><span>Anonymous</span><span>12 min ago</span><span>7 replies</span></div>
+      </div>
+      <div class="feed-item" onclick="showPage('forum');setTimeout(()=>openThread(1),300)">
+        <div class="feed-itag fi-har">Harassment</div>
+        <h4>HR ignoring workplace harassment complaint for 6 weeks</h4>
+        <div class="feed-item-meta"><span>Priya M.</span><span>34 min ago</span><span>14 replies</span></div>
+      </div>
+      <div class="feed-item" onclick="showPage('forum');setTimeout(()=>openThread(2),300)">
+        <div class="feed-itag fi-con">Consumer</div>
+        <h4>Platform delivered expired groceries, offering ₹50 coupon as resolution</h4>
+        <div class="feed-item-meta"><span>Rahul S.</span><span>1 hr ago</span><span>23 replies</span></div>
+      </div>
+      <div class="feed-item" onclick="showPage('forum');setTimeout(()=>openThread(3),300)">
+        <div class="feed-itag fi-lab">Labor</div>
+        <h4>3 months salary withheld — no documentation, just verbal</h4>
+        <div class="feed-item-meta"><span>Anonymous</span><span>2 hr ago</span><span>31 replies</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-n">48,200+</div><div class="stat-l">Problems Posted</div></div>
+    <div class="stat-box"><div class="stat-n">1,340</div><div class="stat-l">Verified Experts</div></div>
+    <div class="stat-box"><div class="stat-n">92%</div><div class="stat-l">Cases Got Help</div></div>
+    <div class="stat-box"><div class="stat-n">18 States</div><div class="stat-l">Active Communities</div></div>
+  </div>
+
+  <div style="display:flex;align-items:baseline;justify-content:space-between;padding:1.5rem 2rem 0.5rem;border-bottom:1px solid var(--border)">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.04em">Browse Issues</div>
+    <a style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);cursor:pointer;font-weight:500" onclick="showPage('forum')">All problems →</a>
+  </div>
+  <div class="home-cats">
+    <div class="cat-card" onclick="showPage('forum')">
+      <div class="cat-n">01</div><h3>Legal & Courts</h3>
+      <p>FIR filing, bail, consumer court, property disputes, family law — get connected to lawyers who fight for real people.</p>
+      <div class="cat-meta">↗ 12,400 cases · 340 lawyers</div>
+    </div>
+    <div class="cat-card" onclick="showPage('forum')">
+      <div class="cat-n">02</div><h3>Harassment & Abuse</h3>
+      <p>Workplace harassment, online trolling, domestic abuse, caste-based discrimination — you will be heard here.</p>
+      <div class="cat-meta">↗ 9,800 cases · 280 counselors</div>
+    </div>
+    <div class="cat-card" onclick="showPage('forum')">
+      <div class="cat-n">03</div><h3>Housing & Landlords</h3>
+      <p>Illegal eviction, deposit theft, maintenance refusal, rent hikes — know your rights as a tenant.</p>
+      <div class="cat-meta">↗ 7,200 cases · 180 experts</div>
+    </div>
+    <div class="cat-card" onclick="showPage('forum')">
+      <div class="cat-n">04</div><h3>Labor & Employment</h3>
+      <p>Salary theft, wrongful termination, PF/ESI fraud, unsafe work conditions — labor law is on your side.</p>
+      <div class="cat-meta">↗ 8,600 cases · 210 lawyers</div>
+    </div>
+    <div class="cat-card" onclick="showPage('forum')">
+      <div class="cat-n">05</div><h3>Consumer Rights</h3>
+      <p>Product fraud, service failure, insurance scams, bank disputes — file complaints and win with community.</p>
+      <div class="cat-meta">↗ 6,100 cases · 120 advisors</div>
+    </div>
+    <div class="cat-card" onclick="showPage('polls')">
+      <div class="cat-n">06</div><h3>Polls & Opinions</h3>
+      <p>Vote on issues that matter. Public opinion on police, politicians, courts, policies. Make your voice count.</p>
+      <div class="cat-meta">↗ 320 active polls · 2.4M votes cast</div>
+    </div>
+  </div>
+
+  <div style="background:var(--ink);padding:2.5rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;border-bottom:2px solid var(--ink)">
+    <div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--paper);letter-spacing:0.04em">Join 48,000 people fighting back</div>
+      <div style="font-size:0.88rem;color:rgba(255,255,255,0.45);margin-top:0.3rem">Free. Anonymous. No judgment.</div>
+    </div>
+    <div style="display:flex;gap:0.8rem;flex-wrap:wrap">
+      <a class="btn btn-red" onclick="showPage('community')">Join Community →</a>
+      <a class="btn" style="background:rgba(255,255,255,0.08);color:white;border:1px solid rgba(255,255,255,0.2)" onclick="showPage('experts')">Find Expert</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===================== ARTICLES ===================== -->
+<div class="page" id="page-articles">
+
+  <div class="articles-hero">
+    <div class="section-wrap">
+      <h1>Articles & Guides</h1>
+      <p>Lawyers, activists, survivors, and experts writing what you need to know — to fight back, file cases, and understand your rights.</p>
+    </div>
+  </div>
+
+  <div class="articles-filter" id="articlesFilter">
+    <button class="filter-btn active" onclick="filterArticles(this,'all')">All</button>
+    <button class="filter-btn" onclick="filterArticles(this,'legal')">Legal Guides</button>
+    <button class="filter-btn" onclick="filterArticles(this,'harassment')">Harassment</button>
+    <button class="filter-btn" onclick="filterArticles(this,'housing')">Housing</button>
+    <button class="filter-btn" onclick="filterArticles(this,'labor')">Labor</button>
+    <button class="filter-btn" onclick="filterArticles(this,'consumer')">Consumer</button>
+    <button class="filter-btn" onclick="filterArticles(this,'rti')">RTI & Govt</button>
+    <button class="filter-btn" onclick="filterArticles(this,'police')">Police</button>
+  </div>
+
+  <div id="articlesList">
+    <div class="articles-layout">
+      <div class="articles-main" id="articlesMain">
+        <!-- populated by JS -->
+      </div>
+      <div class="articles-sidebar">
+        <div class="write-cta">
+          <h3>Write for Parasites</h3>
+          <p>Are you a lawyer, activist, or survivor with something to say? Write for 48,000+ readers who need your knowledge.</p>
+          <button class="btn btn-dark btn-sm" onclick="showToast('Submission form opening...')">Submit Article →</button>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-title">Most Read</div>
+          <div class="sidebar-item" onclick="openArticle(0)"><h4>How to File a Consumer Complaint in India</h4><p>Legal Guide · 48K reads</p></div>
+          <div class="sidebar-item" onclick="openArticle(1)"><h4>POSH Act: What Your Employer Must Do</h4><p>Harassment · 34K reads</p></div>
+          <div class="sidebar-item" onclick="openArticle(2)"><h4>7 Things Your Landlord Cannot Do</h4><p>Housing · 29K reads</p></div>
+          <div class="sidebar-item" onclick="openArticle(3)"><h4>Salary Not Paid? Your 4 Legal Options</h4><p>Labor · 22K reads</p></div>
+          <div class="sidebar-item" onclick="openArticle(4)"><h4>How to File RTI in 5 Steps</h4><p>RTI & Govt · 18K reads</p></div>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-title">Expert Contributors</div>
+          <div class="sidebar-item" onclick="showPage('experts')"><h4>Adv. Rajesh Sharma</h4><p>Tenant & Labour Law · 12 articles</p></div>
+          <div class="sidebar-item" onclick="showPage('experts')"><h4>Dr. Anita Mehra</h4><p>Harassment & Trauma · 8 articles</p></div>
+          <div class="sidebar-item" onclick="showPage('experts')"><h4>Kavita Nair, RTI Expert</h4><p>RTI & Anti-Corruption · 15 articles</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Single article view -->
+  <div id="articleSingle" style="display:none;border-bottom:2px solid var(--ink)">
+    <div style="padding:1rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem">
+      <button class="btn btn-outline btn-sm" onclick="closeArticle()">← Back to Articles</button>
+    </div>
+    <div class="article-single">
+      <div class="art-single-tag" id="sArtTag"></div>
+      <h1 class="art-single-h1" id="sArtTitle"></h1>
+      <div class="art-byline">
+        <div class="art-avatar" id="sArtAvatar"></div>
+        <div class="art-byline-text">
+          <h4 id="sArtAuthor"></h4>
+          <p id="sArtMeta"></p>
+        </div>
+      </div>
+      <div class="art-body" id="sArtBody"></div>
+      <div class="art-share">
+        <button class="btn btn-red btn-sm" onclick="showToast('Link copied!')">Share Article</button>
+        <button class="btn btn-outline btn-sm" onclick="showPage('experts')">Talk to an Expert</button>
+        <button class="btn btn-outline btn-sm" onclick="showPage('forum')">Discuss in Forum</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===================== EXPERTS ===================== -->
+<div class="page" id="page-experts">
+
+  <div class="experts-hero">
+    <div class="exp-hero-left">
+      <h1>Find Your Expert</h1>
+      <p>Every expert on Parasites is background-verified. First consultation is free for all legal and medical experts. No hidden fees, no corporate filters.</p>
+      <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1rem">
+        <span style="font-family:'DM Mono',monospace;font-size:0.72rem;color:rgba(255,255,255,0.4);letter-spacing:0.06em">✓ 1,340 Verified Experts</span>
+        <span style="font-family:'DM Mono',monospace;font-size:0.72rem;color:rgba(255,255,255,0.4);letter-spacing:0.06em">· Free First Consult</span>
+        <span style="font-family:'DM Mono',monospace;font-size:0.72rem;color:rgba(255,255,255,0.4);letter-spacing:0.06em">· 18 States</span>
+      </div>
+    </div>
+    <div class="exp-hero-right">
+      <div class="exp-search">
+        <input type="text" placeholder="Search by name, specialty, location..." id="expertSearch" oninput="renderExperts()">
+        <button onclick="renderExperts()">Search</button>
+      </div>
+      <div class="exp-type-tabs" id="expTabs">
+        <span class="exp-tab active" onclick="setExpType(this,'all')">All Experts</span>
+        <span class="exp-tab" onclick="setExpType(this,'lawyer')">Lawyers</span>
+        <span class="exp-tab" onclick="setExpType(this,'doctor')">Doctors</span>
+        <span class="exp-tab" onclick="setExpType(this,'counselor')">Counselors</span>
+        <span class="exp-tab" onclick="setExpType(this,'bureaucrat')">Bureaucrats</span>
+        <span class="exp-tab" onclick="setExpType(this,'activist')">Activists & NGOs</span>
+        <span class="exp-tab" onclick="setExpType(this,'politician')">Politicians</span>
+        <span class="exp-tab" onclick="setExpType(this,'ca')">CAs & Finance</span>
+        <span class="exp-tab" onclick="setExpType(this,'journalist')">Journalists</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="experts-grid-section" id="expertsContent"></div>
+
+</div>
+
+<!-- ===================== POLLS ===================== -->
+<div class="page" id="page-polls">
+
+  <div class="polls-hero">
+    <div class="section-wrap">
+      <h1>Public Polls</h1>
+      <p>Vote on issues that matter. Your voice shapes what India sees — and what politicians cannot ignore.</p>
+    </div>
+  </div>
+
+  <div class="polls-layout">
+    <div class="polls-main">
+      <div class="create-poll-form">
+        <h3>Create a Poll</h3>
+        <div class="form-group">
+          <label class="form-label">Your Question *</label>
+          <input type="text" class="form-input" placeholder="e.g. Should police officers be held criminally liable for custodial deaths?" id="pollQ">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-input form-select" id="pollCat">
+            <option>Police & Justice</option><option>Housing & Tenants</option><option>Labor & Employment</option>
+            <option>Consumer Rights</option><option>Women's Safety</option><option>Education</option><option>Healthcare</option><option>Environment</option>
+          </select>
+        </div>
+        <label class="form-label">Options *</label>
+        <div class="poll-opts-input" id="pollOpts">
+          <div class="poll-opt-input-row"><input type="text" class="form-input" placeholder="Option 1" value="Yes, absolutely"></div>
+          <div class="poll-opt-input-row"><input type="text" class="form-input" placeholder="Option 2" value="No, existing laws are enough"></div>
+          <div class="poll-opt-input-row"><input type="text" class="form-input" placeholder="Option 3" value="Needs more study"></div>
+        </div>
+        <div class="add-opt-btn" onclick="addPollOption()">+ Add option</div>
+        <div style="margin-top:1rem;display:flex;gap:0.8rem">
+          <button class="btn btn-red" onclick="createPoll()">Publish Poll →</button>
+          <button class="btn btn-outline" onclick="showToast('Poll saved as draft')">Save Draft</button>
+        </div>
+      </div>
+
+      <div id="pollsList"></div>
+    </div>
+    <div class="polls-sidebar">
+      <div class="trending-polls">
+        <div class="sidebar-title">Trending Polls</div>
+        <div class="trending-item"><h4>Do you trust the Indian judiciary to deliver justice in 5 years?</h4><p>Justice & Courts · 18,400 votes</p></div>
+        <div class="trending-item"><h4>Should landlords be mandated to return deposits within 30 days?</h4><p>Housing · 12,200 votes</p></div>
+        <div class="trending-item"><h4>Is minimum wage in India enough to live on?</h4><p>Labor · 9,800 votes</p></div>
+        <div class="trending-item"><h4>Should politicians be barred from practicing law simultaneously?</h4><p>Politics · 8,400 votes</p></div>
+        <div class="trending-item"><h4>Do police in your area respond when called?</h4><p>Police · 24,100 votes</p></div>
+      </div>
+      <div style="margin-top:2rem">
+        <div class="sidebar-title">Poll Stats</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem">
+          <div style="display:flex;justify-content:space-between;font-size:0.82rem"><span style="color:var(--muted)">Total polls</span><span style="font-weight:500">324</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.82rem"><span style="color:var(--muted)">Total votes</span><span style="font-weight:500">2.4M</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.82rem"><span style="color:var(--muted)">Active today</span><span style="font-weight:500;color:var(--green)">48 polls</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:0.82rem"><span style="color:var(--muted)">Results used in media</span><span style="font-weight:500">12</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===================== FORUM ===================== -->
+<div class="page" id="page-forum">
+
+  <div class="forum-hero">
+    <h1>Problem Forum</h1>
+    <p>Post your problem. Get community support, expert advice, and real responses — not automated bots.</p>
+  </div>
+
+  <div id="forumList">
+    <div class="forum-layout">
+      <div class="forum-sidebar">
+        <h4>Categories</h4>
+        <div class="forum-cat-item active" onclick="setForumCat(this,'all')"><span>All Problems</span><span class="forum-cat-count">48.2K</span></div>
+        <div class="forum-cat-item" onclick="setForumCat(this,'legal')"><span>Legal & Courts</span><span class="forum-cat-count">12.4K</span></div>
+        <div class="forum-cat-item" onclick="setForumCat(this,'harassment')"><span>Harassment</span><span class="forum-cat-count">9.8K</span></div>
+        <div class="forum-cat-item" onclick="setForumCat(this,'housing')"><span>Housing</span><span class="forum-cat-count">7.2K</span></div>
+        <div class="forum-cat-item" onclick="setForumCat(this,'labor')"><span>Labor</span><span class="forum-cat-count">8.6K</span></div>
+        <div class="forum-cat-item" onclick="setForumCat(this,'consumer')"><span>Consumer</span><span class="forum-cat-count">6.1K</span></div>
+        <div class="forum-cat-item" onclick="setForumCat(this,'police')"><span>Police & Govt</span><span class="forum-cat-count">4.2K</span></div>
+        <div class="forum-cat-item" onclick="setForumCat(this,'womens')"><span>Women's Safety</span><span class="forum-cat-count">5.7K</span></div>
+        <div class="forum-cat-item" onclick="setForumCat(this,'dalit')"><span>Dalit Rights</span><span class="forum-cat-count">3.1K</span></div>
+        <div class="forum-cat-item" onclick="setForumCat(this,'rti')"><span>RTI & Govt</span><span class="forum-cat-count">2.1K</span></div>
+        <h4>Filter</h4>
+        <div class="forum-cat-item" onclick="showToast('Showing urgent cases')"><span>🔴 Urgent</span><span class="forum-cat-count">124</span></div>
+        <div class="forum-cat-item" onclick="showToast('Showing expert-answered')"><span>✓ Expert Answered</span><span class="forum-cat-count">8.4K</span></div>
+        <div class="forum-cat-item" onclick="showToast('Showing resolved cases')"><span>✅ Resolved</span><span class="forum-cat-count">14.2K</span></div>
+      </div>
+      <div class="forum-main">
+        <div class="forum-topbar">
+          <div class="forum-sort">
+            <button class="sort-btn active" onclick="setSortBtn(this)">Latest</button>
+            <button class="sort-btn" onclick="setSortBtn(this)">Hot</button>
+            <button class="sort-btn" onclick="setSortBtn(this)">Urgent</button>
+            <button class="sort-btn" onclick="setSortBtn(this)">Resolved</button>
+          </div>
+          <button class="btn btn-red btn-sm" onclick="showPostForm()">+ Post Problem</button>
+        </div>
+        <div class="thread-list" id="threadList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="forumThread" style="display:none">
+    <div style="padding:1rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem">
+      <button class="btn btn-outline btn-sm" onclick="closeThread()">← Back to Forum</button>
+      <span id="threadBreadCat" class="tag-pill tag-legal" style="font-size:0.68rem"></span>
+    </div>
+    <div class="thread-detail">
+      <h1 class="thread-detail-title" id="tdTitle"></h1>
+      <div class="thread-op">
+        <div class="thread-op-meta">
+          <div class="op-avatar" id="tdAvatar"></div>
+          <div><div class="op-name" id="tdAuthor"></div><div class="op-time" id="tdTime"></div></div>
+          <span id="tdUrgent"></span>
+        </div>
+        <div class="op-body" id="tdBody"></div>
+        <div class="op-actions">
+          <span class="op-action" onclick="showToast('Upvoted!')">▲ Upvote</span>
+          <span class="op-action" onclick="showToast('Reply form opened below')">💬 Reply</span>
+          <span class="op-action" onclick="showPage('experts')">Connect Expert</span>
+          <span class="op-action" onclick="showToast('Problem shared!')">Share</span>
+          <span class="op-action" onclick="showToast('Reported to moderators')">Report</span>
+        </div>
+      </div>
+      <div id="tdReplies"></div>
+      <div class="reply-form">
+        <h3>Add Your Response</h3>
+        <div class="form-group">
+          <label class="form-label">Your name (optional)</label>
+          <input type="text" class="form-input" placeholder="Anonymous">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your response *</label>
+          <textarea class="form-input form-textarea" placeholder="Share your experience, knowledge, or advice. Be respectful and constructive."></textarea>
+        </div>
+        <div style="display:flex;gap:0.8rem">
+          <button class="btn btn-red" onclick="showToast('Response posted! Thank you.')">Post Reply →</button>
+          <button class="btn btn-outline" onclick="showPage('experts')">Get Expert Help</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Post form modal -->
+  <div class="modal-backdrop" id="postModal">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <h2>Post Your Problem</h2>
+        <button class="modal-close" onclick="closePostForm()">✕</button>
+      </div>
+      <div class="modal-bdy">
+        <div class="form-group">
+          <label class="form-label">Your name (optional)</label>
+          <input type="text" class="form-input" placeholder="Anonymous">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Title *</label>
+          <input type="text" class="form-input" placeholder="Brief summary of your problem" id="newPostTitle">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Describe your problem *</label>
+          <textarea class="form-input form-textarea" placeholder="What happened? When? Who's involved? What have you tried?" id="newPostBody"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-input form-select" id="newPostCat">
+            <option>Legal & Courts</option><option>Harassment</option><option>Housing</option><option>Labor</option>
+            <option>Consumer Rights</option><option>Police & Govt</option><option>Women's Safety</option><option>Dalit Rights</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Is this urgent?</label>
+          <select class="form-input form-select" id="newPostUrgent">
+            <option>No — general advice needed</option>
+            <option>Yes — need help within 24 hours</option>
+            <option>Emergency — immediate danger</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Connect with an expert?</label>
+          <select class="form-input form-select">
+            <option>Yes — connect me with relevant lawyer/counselor</option>
+            <option>Community support only</option>
+            <option>Just for visibility</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:0.8rem;margin-top:0.5rem">
+          <button class="btn btn-red" onclick="submitNewPost()" style="flex:1">Post My Problem →</button>
+        </div>
+        <div style="margin-top:1rem;padding:0.8rem;background:var(--surface);font-size:0.78rem;color:var(--muted);line-height:1.6">
+          ✓ Anonymous posting supported &nbsp;·&nbsp; ✓ Experts notified &nbsp;·&nbsp; ✓ Free consultation available
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===================== COMMUNITY ===================== -->
+<div class="page" id="page-community">
+
+  <div id="communityGroups">
+    <div class="community-hero">
+      <h1>Community Groups</h1>
+      <p>Join communities of people fighting the same battles. Share, support, organize. Every group has verified expert moderators.</p>
+    </div>
+    <div class="community-groups-grid" id="groupsGrid"></div>
+  </div>
+
+  <div id="communityThread" style="display:none">
+    <div style="padding:1rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+      <button class="btn btn-outline btn-sm" onclick="closeGroupThread()">← All Groups</button>
+      <span id="groupThreadTitle" style="font-size:0.88rem;color:var(--muted)"></span>
+    </div>
+    <div class="group-threads-wrap">
+      <div class="group-info-panel">
+        <div class="group-info-icon" id="groupInfoIcon"></div>
+        <div class="group-info-name" id="groupInfoName"></div>
+        <div class="group-info-desc" id="groupInfoDesc"></div>
+        <div class="group-stats-mini">
+          <div class="gsm"><span>Members</span><span id="groupMembers"></span></div>
+          <div class="gsm"><span>Active today</span><span id="groupActive"></span></div>
+          <div class="gsm"><span>Posts this week</span><span id="groupPosts"></span></div>
+          <div class="gsm"><span>Expert moderators</span><span id="groupMods"></span></div>
+        </div>
+        <button class="btn btn-red" style="width:100%;margin-bottom:1rem" onclick="showToast('You joined this community!')">Join Group</button>
+        <div class="pinned-post" id="pinnedPost"></div>
+        <div style="margin-top:1rem">
+          <div style="font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem">Expert Moderators</div>
+          <div id="groupModsList"></div>
+        </div>
+      </div>
+      <div>
+        <div class="forum-topbar" style="flex-wrap:wrap;gap:0.8rem">
+          <div class="forum-sort">
+            <button class="sort-btn active" onclick="setSortBtn(this)">Latest</button>
+            <button class="sort-btn" onclick="setSortBtn(this)">Hot</button>
+            <button class="sort-btn" onclick="setSortBtn(this)">Pinned</button>
+          </div>
+          <button class="btn btn-red btn-sm" onclick="showPostForm()">+ New Post</button>
+        </div>
+        <div id="groupThreadsList"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ====== TOAST ====== -->
+<div id="toast"></div>
+
+<script>
+// ============ DATA ============
+const articles = [
+  {id:0,tag:'Legal Guide',cat:'legal',title:'How to File a Consumer Complaint in India — And Actually Win',
+   excerpt:'Most people don\'t know they have a legal right to compensation for defective products, service failures, and fraudulent billing. Here is the complete step-by-step guide.',
+   author:'Adv. Sunita Rao',date:'May 14, 2025',read:'8 min',views:'48K',initials:'SR',
+   body:`<p>Every year, millions of Indians are cheated by companies, service providers, and sellers — and most do nothing about it. Why? Because they don't know they have a powerful legal weapon at their disposal: the Consumer Protection Act, 2019.</p>
+   <h2>What Can You Complain About?</h2>
+   <p>You can file a consumer complaint for: defective goods, deficiency in services, overcharging above MRP, misleading advertisements, unfair trade practices, and even hazardous products.</p>
+   <div class="callout"><h3>Important: Time Limit</h3><p>You must file within 2 years of the cause of action. Don't wait. Start collecting evidence immediately.</p></div>
+   <h2>Step 1: Send a Legal Notice First</h2>
+   <p>Before filing in court, send a written legal notice to the company/seller via registered post. State the problem clearly, give them 15 days to respond, and mention you will approach the Consumer Forum if they don't. Many companies settle at this stage.</p>
+   <h2>Step 2: Determine the Right Forum</h2>
+   <ul><li>District Consumer Disputes Redressal Commission — claims up to ₹50 lakhs</li><li>State Consumer Disputes Redressal Commission — ₹50 lakhs to ₹2 crores</li><li>National Consumer Disputes Redressal Commission — above ₹2 crores</li></ul>
+   <h2>Step 3: Gather Your Evidence</h2>
+   <p>This is the most critical step. Collect: purchase receipts, invoices, screenshots of advertisements, WhatsApp conversations, emails, photos of defective goods, warranty cards, and any communication with the company.</p>
+   <blockquote><p>The strongest consumer cases are ones where the paper trail is complete. Never throw away packaging, receipts, or communication records.</p></blockquote>
+   <h2>Step 4: Draft and File Your Complaint</h2>
+   <p>Your complaint must include your name and address, the opposite party's name and address, the facts of the case in chronological order, the documents you're relying on, and the relief you're seeking (refund, replacement, compensation, or all three).</p>
+   <h2>Step 5: The Hearing Process</h2>
+   <p>After filing, the forum will send a notice to the opposite party. They have 30 days to respond. The Commission typically decides simple cases within 90-150 days. You can appear in person — you do not need a lawyer, though one helps.</p>`},
+  {id:1,tag:'Harassment',cat:'harassment',title:'POSH Act 2013 — What Your Employer Must Do and Usually Doesn\'t',
+   excerpt:'The Prevention of Sexual Harassment Act is one of India\'s strongest workplace protection laws. Most employers violate it daily. Here\'s what you\'re entitled to.',
+   author:'Dr. Priya Sinha',date:'May 10, 2025',read:'6 min',views:'34K',initials:'PS',
+   body:`<p>The Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013 — commonly called POSH — is one of India's most important workplace protection laws. And one of the most ignored.</p>
+   <h2>What Every Employer Must Do</h2>
+   <ul><li>Constitute an Internal Complaints Committee (ICC) with a minimum of 4 members, at least half of whom are women</li><li>Display the POSH policy prominently in the workplace</li><li>Conduct awareness programs for employees every year</li><li>Submit an annual report to the District Officer on the number of complaints received and their outcomes</li></ul>
+   <div class="callout"><h3>Did You Know?</h3><p>Any organization with 10 or more employees must have an ICC. If yours doesn't, that itself is a legal violation you can report.</p></div>
+   <h2>What Counts as Sexual Harassment Under POSH?</h2>
+   <p>POSH covers physical contact, a demand or request for sexual favours, sexually coloured remarks, showing pornography, and any other unwelcome physical, verbal, or non-verbal conduct of a sexual nature. The law applies to permanent, temporary, contractual, and even domestic workers.</p>
+   <h2>Your Rights When You File a Complaint</h2>
+   <ul><li>The ICC must complete its inquiry within 90 days</li><li>You have the right to request a transfer or leave during the inquiry</li><li>Your identity must remain confidential — anyone who leaks it can be penalized</li><li>You cannot be retaliated against for filing a complaint</li></ul>`},
+  {id:2,tag:'Housing',cat:'housing',title:'7 Things Your Landlord Cannot Legally Do in India',
+   excerpt:'Most tenants in India don\'t know their rights. Landlords exploit this daily. Here are 7 things no landlord can legally do — no matter what your lease says.',
+   author:'Adv. Rajesh Sharma',date:'May 7, 2025',read:'5 min',views:'29K',initials:'RS',
+   body:`<p>Across India, landlords routinely break the law — because most tenants don't fight back. That changes now. Here are 7 things your landlord cannot do, regardless of what your rental agreement says.</p>
+   <h2>1. Enter Your Home Without Notice</h2>
+   <p>Your landlord does not have the right to enter your rented premises without prior notice and your consent. Most state Rent Acts require at least 24 hours notice except in genuine emergencies.</p>
+   <h2>2. Cut Off Essential Utilities</h2>
+   <p>Disconnecting water, electricity, or gas to force you out is illegal. It constitutes criminal intimidation and harassment under IPC Section 503.</p>
+   <div class="callout"><h3>Key Law</h3><p>Under state Rent Control Acts and IPC provisions, utility disconnection as eviction pressure can result in criminal charges against the landlord.</p></div>
+   <h2>3. Evict You Without Due Process</h2>
+   <p>Your landlord cannot physically throw you out. They must file an eviction suit in Rent Court and obtain a decree. Forceful eviction is a cognizable offence.</p>
+   <h2>4. Refuse to Return Security Deposit Without Valid Reason</h2>
+   <p>Your security deposit must be returned — typically within 30 days of vacating — minus legitimate deductions for actual damage (not normal wear and tear). Withholding it without cause is recoverable in court.</p>
+   <h2>5. Increase Rent Arbitrarily</h2>
+   <p>Rent hikes must follow the terms of your agreement. In rent-controlled areas, hikes require legal permission. Any rent increase without proper notice or above contracted rates is challengeable.</p>`},
+  {id:3,tag:'Labor',cat:'labor',title:'Salary Not Paid? These Are Your 4 Legal Options',
+   excerpt:'Salary theft is one of the most common workplace crimes in India. You have powerful legal remedies — and most are free to use.',
+   author:'CA Deepak Singh',date:'May 3, 2025',read:'5 min',views:'22K',initials:'DS',
+   body:`<p>Your employer is legally obligated to pay your salary on time. If they don't — or if they withhold salary without cause — you have powerful, free legal remedies at your disposal.</p>
+   <h2>Option 1: Labour Commissioner</h2>
+   <p>File a complaint with your state's Labour Commissioner. This is free, relatively fast, and the Commissioner has the power to summon your employer, conduct inquiries, and direct payment. For amounts under ₹5 lakhs, this is usually the quickest route.</p>
+   <h2>Option 2: Labour Court</h2>
+   <p>If the employer ignores the Labour Commissioner or the matter is complex, you can file a claim in Labour Court under the Payment of Wages Act, 1936. The Act allows you to claim unpaid wages plus compensation of up to 10 times the unpaid amount.</p>
+   <div class="callout"><h3>Critical Time Limit</h3><p>File within 1 year of the wage becoming due. Don't wait — the limitation period is strict.</p></div>
+   <h2>Option 3: Civil Court</h2>
+   <p>For higher amounts or breach of employment contract claims, a civil suit for recovery of money is an option. This takes longer but allows for broader claims including damages.</p>
+   <h2>Option 4: EPFO Complaint</h2>
+   <p>If your employer is also not depositing Provident Fund contributions, file a separate complaint with EPFO. This is a criminal offence and can result in imprisonment of up to 1 year plus fines.</p>`},
+  {id:4,tag:'RTI & Govt',cat:'rti',title:'How to File an RTI in 5 Steps — And Get Real Answers',
+   excerpt:'The Right to Information Act is one of the most powerful tools citizens have. Here\'s exactly how to use it — from drafting to escalation.',
+   author:'Kavita Nair',date:'Apr 28, 2025',read:'7 min',views:'18K',initials:'KN',
+   body:`<p>The Right to Information Act, 2005 gives every Indian citizen the right to request information from any public authority. Government bodies must respond within 30 days. Here's how to use it effectively.</p>
+   <h2>Step 1: Identify the Right Public Authority</h2>
+   <p>First, determine which government department or public body holds the information you need. RTI applies to all bodies constituted by the Constitution, all bodies created under a law, and bodies substantially financed by the government.</p>
+   <h2>Step 2: Draft Your Application</h2>
+   <p>Your RTI application needs: the name and address of the Public Information Officer (PIO), your name and address, the specific information you're seeking (be precise and specific), and the application fee payment details.</p>
+   <div class="callout"><h3>Pro Tip</h3><p>Be specific. "Please provide copies of all tender documents for Project X awarded between January 2024 and March 2025" is a good RTI. "Tell me about corruption in your department" is not.</p></div>
+   <h2>Step 3: Pay the Fee and Submit</h2>
+   <p>The RTI fee is ₹10 for Central Government departments. Many states have their own fee structures. BPL card holders are exempt. You can file online at rtionline.gov.in or by post.</p>
+   <h2>Step 4: Track and Follow Up</h2>
+   <p>The PIO must respond within 30 days (48 hours if the matter concerns life and liberty). If they don't respond, your information is deemed denied and you can appeal directly.</p>
+   <h2>Step 5: File First Appeal if Ignored</h2>
+   <p>If the PIO doesn't respond or gives an unsatisfactory response, file a First Appeal with the Appellate Authority within 30 days. If that too fails, escalate to the Central or State Information Commission.</p>`}
+];
+
+const experts = [
+  {name:'Adv. Rajesh Sharma',type:'lawyer',icon:'⚖️',avail:'now',spec:'Tenant Rights, Labour Law, Criminal Defense',bio:'High Court, Allahabad. 18 years. 200+ deposit recovery cases won. Free first consult for housing and labour issues.',tags:['Housing','Labour','Criminal'],rating:'4.9 ★ (142 reviews)',fee:'Free 1st consult',states:'UP, Delhi'},
+  {name:'Adv. Meenakshi Iyer',type:'lawyer',icon:'⚖️',avail:'6pm',spec:'Family Law, Domestic Violence, Women\'s Rights',bio:'Madras HC, 14 years. Specializes in 498A, divorce, custody, and domestic violence cases. Empathetic, effective.',tags:['Family Law','DV','498A'],rating:'5.0 ★ (98 reviews)',fee:'Free 1st consult',states:'TN, Kerala, Karnataka'},
+  {name:'Adv. Vikram Bose',type:'lawyer',icon:'⚖️',avail:'now',spec:'Consumer Forum, Banking Disputes, Insurance',bio:'District Consumer Forum specialist. 12 years. 94% case success rate. Files consumer complaints across India.',tags:['Consumer','Banking','Insurance'],rating:'4.8 ★ (211 reviews)',fee:'Free 1st consult',states:'West Bengal, Jharkhand'},
+  {name:'Adv. Sandhya Pillai',type:'lawyer',icon:'⚖️',avail:'now',spec:'SC/ST Atrocities Act, Dalit Rights, PIL',bio:'Supreme Court. 20 years. Pioneer in Dalit rights litigation. Has argued landmark cases before SC and HCs.',tags:['Dalit Rights','SC/ST','PIL'],rating:'5.0 ★ (67 reviews)',fee:'Free for SC/ST clients',states:'All India'},
+  {name:'Dr. Anita Mehra',type:'doctor',icon:'🧠',avail:'now',spec:'Trauma, Harassment, Mental Health',bio:'Clinical psychologist, 16 years. Specializes in workplace trauma and domestic abuse recovery. Free first session.',tags:['Trauma','PTSD','Workplace'],rating:'4.9 ★ (184 reviews)',fee:'First session free',states:'All India (Online)'},
+  {name:'Dr. Ramesh Kumar',type:'doctor',icon:'🏥',avail:'tom',spec:'Medico-Legal, MLC, Forensic Documentation',bio:'MBBS, MD Forensic Medicine. Expert in writing medico-legal certificates for court cases and insurance claims.',tags:['MLC','Forensic','Court Docs'],rating:'4.7 ★ (56 reviews)',fee:'₹500/consultation',states:'Delhi, Haryana'},
+  {name:'Dr. Fatima Sheikh',type:'doctor',icon:'💊',avail:'now',spec:'Occupational Health, Workplace Injury, Labour',bio:'Occupational health specialist. Expert witness in workplace accident and industrial disease cases. 10 years.',tags:['Work Injury','Industrial','Expert Witness'],rating:'4.8 ★ (43 reviews)',fee:'₹800/report',states:'Maharashtra, Gujarat'},
+  {name:'Neha Sood',type:'counselor',icon:'🌿',avail:'now',spec:'Domestic Abuse, Women\'s Crisis, Trauma',bio:'Trauma-informed counselor. 12 years in women\'s shelters and crisis hotlines. EMDR certified.',tags:['DV','Crisis','Women'],rating:'5.0 ★ (130 reviews)',fee:'Free for abuse survivors',states:'All India (Online)'},
+  {name:'Arjun Malhotra',type:'counselor',icon:'🌿',avail:'4pm',spec:'Workplace Stress, Legal Anxiety, Depression',bio:'Licensed counselor with expertise in legal process trauma — people going through cases, police encounters, court stress.',tags:['Legal Stress','Anxiety','Depression'],rating:'4.7 ★ (88 reviews)',fee:'₹600/session',states:'All India (Online)'},
+  {name:'IAS (Retd.) Suresh Nair',type:'bureaucrat',icon:'🏛️',avail:'now',spec:'RTI, Government Process, Policy Advocacy',bio:'28 years as IAS officer. Now helps citizens navigate government systems, file RTIs, and escalate complaints effectively.',tags:['RTI','IAS','Govt Process'],rating:'4.9 ★ (72 reviews)',fee:'Free consultation',states:'Kerala, Tamil Nadu'},
+  {name:'Ananya Krishnan',type:'bureaucrat',icon:'🏛️',avail:'3pm',spec:'Municipal, Property Registration, RERA',bio:'Former municipal commissioner. Specialist in property registration disputes, RERA complaints, and builder fraud cases.',tags:['RERA','Property','Municipal'],rating:'4.8 ★ (49 reviews)',fee:'₹1,000/consult',states:'Maharashtra, Goa'},
+  {name:'Kavita Nair',type:'activist',icon:'✊',avail:'now',spec:'RTI Expert, Anti-Corruption, PIL',bio:'600+ successful RTIs filed. Has led campaigns resulting in 3 government policy reversals. RTI expert since 2010.',tags:['RTI','Anti-Corruption','PIL'],rating:'5.0 ★ (210 reviews)',fee:'Free',states:'All India'},
+  {name:'Rizwan Khan',type:'activist',icon:'✊',avail:'evenings',spec:'Labor Rights, Factory Workers, MNREGA',bio:'Union organizer for 15 years. Expert in MNREGA rights, factory worker protections, and mass labor complaints.',tags:['Labour','Factory','MNREGA'],rating:'4.8 ★ (94 reviews)',fee:'Free for workers',states:'UP, Bihar, MP'},
+  {name:'Deepa Rao - iCall',type:'activist',icon:'🤝',avail:'now',spec:'Mental Health Advocacy, Crisis Support',bio:'Director at iCall, Tata Institute of Social Sciences. Provides free crisis counseling referrals and mental health advocacy.',tags:['Mental Health','Crisis','NGO'],rating:'5.0 ★ (156 reviews)',fee:'Free referral service',states:'All India'},
+  {name:'MLA Sunita Joshi',type:'politician',icon:'🏟️',avail:'office hours',spec:'Constituency Issues, Govt Red Tape',bio:'Elected MLA, able to raise constituent issues in Assembly. Has a proven record of intervening on housing and police inaction issues.',tags:['Assembly','Constituency','Govt'],rating:'4.4 ★ (38 reviews)',fee:'Free (constituent)',states:'Rajasthan'},
+  {name:'Councillor Amar Patil',type:'politician',icon:'🏟️',avail:'evenings',spec:'Municipal Issues, Local Police, Infrastructure',bio:'Municipal councillor with direct access to local police, BMC officials, and ward officers. Helps with local-level escalation.',tags:['Municipal','Local Police','BMC'],rating:'4.6 ★ (62 reviews)',fee:'Free',states:'Maharashtra'},
+  {name:'CA Deepak Singh',type:'ca',icon:'💰',avail:'now',spec:'Financial Fraud, Salary Documentation, Tax',bio:'Chartered Accountant, 14 years. Expert in salary dispute documentation, financial fraud cases, and insurance claims.',tags:['Salary','Fraud','Tax'],rating:'4.8 ★ (119 reviews)',fee:'Free 1st consult',states:'Delhi, NCR'},
+  {name:'CA Prabhdeep Kaur',type:'ca',icon:'💰',avail:'2pm',spec:'GST Disputes, Business Fraud, Bank Issues',bio:'GST specialist and banking dispute advisor. Has helped 300+ clients recover money from fraudulent businesses.',tags:['GST','Banking','Fraud Recovery'],rating:'4.9 ★ (87 reviews)',fee:'₹500/hr',states:'Punjab, Haryana'},
+  {name:'Siddharth Varadarajan',type:'journalist',icon:'📰',avail:'by appointment',spec:'Political Accountability, Investigative',bio:'Senior investigative journalist. Will amplify genuine systemic issues — police inaction, corruption, government failure — that deserve public attention.',tags:['Investigative','Political','Media'],rating:'4.9 ★ (41 reviews)',fee:'Free (public interest)',states:'All India'},
+  {name:'Ritu Sharma',type:'journalist',icon:'📰',avail:'evenings',spec:'Women\'s Rights, Social Issues, Community',bio:'Regional journalist covering women\'s safety and community rights. Has published 40+ accountability stories.',tags:['Women\'s Rights','Social','Local'],rating:'4.7 ★ (28 reviews)',fee:'Free (public interest)',states:'Haryana, Rajasthan, Delhi'}
+];
+
+const threads = [
+  {id:0,cat:'legal',catLabel:'Legal',catClass:'tag-legal',pinned:true,title:'Landlord refusing to return ₹45,000 deposit — 8 months, Lucknow',preview:'I vacated on September 1st. My landlord initially agreed to return the deposit but has been giving excuses since. I have all receipts and photos...',author:'Anonymous',initials:'AN',time:'12 minutes ago',votes:47,replies:7,views:234,urgent:false,
+   body:`I rented a 2BHK in Lucknow for ₹12,000/month. I vacated on 1st September 2024, after giving proper 1-month notice as per the agreement. At the time of vacating, the landlord did a walkthrough with me and said the flat was in good condition.\n\nHe agreed verbally to return my ₹45,000 security deposit within 30 days. It has now been 8 months. Every time I call, he gives a new excuse:\n- October: "My account has issues"\n- November: "I had a family emergency"\n- December: "The new tenant damaged something, I'll deduct it"\n- January onwards: He stopped picking calls.\n\nI have: signed rental agreement, move-out photos (timestamped), WhatsApp conversations where he acknowledges the flat was fine, and all rent receipts.\n\nI don't know what to do. Should I go to consumer court? Police? A lawyer? I can't afford expensive legal fees.`,
+   replies:[
+     {author:'Adv. Rajesh Sharma',expert:true,initials:'RS',time:'8 min ago',text:'This is a clear case of wrongful withholding of security deposit. You have strong grounds. File a complaint in District Consumer Forum — fee is only ₹200, you don\'t need a lawyer. Bring all your documents. The forum can order return of deposit + compensation + legal costs. Would you like help drafting the complaint?'},
+     {author:'Similar Situation Survivor',expert:false,initials:'SS',time:'5 min ago',text:'I went through the exact same thing in 2023. Filed consumer forum complaint, got full deposit + ₹5,000 extra within 4 months. The key is sending a registered legal notice first. Do that TODAY — it often makes landlords pay immediately.'}
+   ]},
+  {id:1,cat:'harassment',catLabel:'Harassment',catClass:'tag-harass',pinned:false,title:'HR ignoring workplace sexual harassment complaint for 6 weeks — POSH Act violation?',preview:'My manager has been making inappropriate comments and touching my shoulder without consent. I filed with HR 6 weeks ago. Complete silence...',author:'Priya M.',initials:'PM',time:'34 minutes ago',votes:89,replies:14,views:1240,urgent:true,
+   body:`I work at a mid-size tech company in Pune. My male manager started making comments about my appearance about 3 months ago. It escalated to him touching my shoulder and once my hand, which I clearly said I was uncomfortable with.\n\nOn March 15th, I filed a formal complaint with HR through their online portal. I received an automated acknowledgment. Since then — 6 weeks of complete silence. No ICC meeting scheduled. No acknowledgment from a human. Nothing.\n\nI'm scared to escalate because:\n1. My manager is the one who decides my performance review\n2. The HR head is his friend\n3. I'm on a contract that comes up for renewal next month\n\nI know the POSH Act says the ICC must respond within 90 days, but I haven't even gotten a human response in 6 weeks. What are my legal options? Am I risking my job if I push further?`,
+   replies:[
+     {author:'Dr. Anita Mehra',expert:true,initials:'AM',time:'20 min ago',text:'First: what you\'re experiencing is a clear POSH Act violation. The company is legally required to acknowledge your complaint and constitute an ICC inquiry within a specific timeframe. Send an email to the CEO/MD directly with your complaint attached, CC HR, and mention you are aware of your rights under the POSH Act 2013. Keep a record of everything.'},
+     {author:'Adv. Meenakshi Iyer',expert:true,initials:'MI',time:'15 min ago',text:'Legally: (1) If the company doesn\'t have an ICC or it isn\'t functioning, file with the Local Complaints Committee (LCC) constituted by the district. (2) You can also file a complaint with the Labour Commissioner. (3) Retaliation against a POSH complainant is a separate legal violation that attracts penalty. Your job is MORE protected now that you\'ve filed, not less.'},
+     {author:'Priya M.',initials:'PM',time:'10 min ago',text:'Thank you so much. I didn\'t know about the LCC. Do I need a lawyer to file there?'}
+   ]},
+  {id:2,cat:'consumer',catLabel:'Consumer',catClass:'tag-consumer',pinned:false,title:'E-commerce platform delivered expired groceries, offering ₹50 coupon — I want real action',preview:'Ordered ₹2,400 worth of groceries. 6 items expired by 2-4 months. Raised complaint. Platform offered ₹50 coupon...',author:'Rahul S.',initials:'RS',time:'1 hour ago',votes:63,replies:23,views:892,urgent:false,
+   body:`I ordered ₹2,400 worth of groceries from a major e-commerce platform last Monday. When I opened the delivery, 6 items were expired — some by 2 months, one by 4 months. This isn't a manufacturing date confusion — the expiry dates were clearly printed and long passed.\n\nI raised a complaint with the platform's chat support. After 3 rounds of back-and-forth and uploading photos, their resolution was: ₹50 coupon for future orders.\n\nThis is:\n1. A consumer rights violation\n2. A food safety issue (selling expired food is illegal)\n3. A health hazard\n\nI want more than a ₹50 coupon. I want them to understand this can seriously harm people. How do I escalate this in a way that creates actual impact?`,
+   replies:[
+     {author:'Adv. Vikram Bose',expert:true,initials:'VB',time:'45 min ago',text:'File a FSSAI complaint immediately at fssai.gov.in/home/fosacos.html — selling expired food is a criminal offence under the Food Safety and Standards Act. Separately, file in District Consumer Forum for full refund + compensation for the stress + ₹25,000+ for the company\'s attitude. The forum takes these seriously.'},
+     {author:'Consumer Rights Advocate',expert:false,initials:'CR',time:'30 min ago',text:'Also tweet about this publicly tagging the company, FSSAI, and the National Consumer Helpline (1800-11-4000). Companies often settle immediately to avoid PR damage. Screenshot everything before you post publicly.'}
+   ]},
+  {id:3,cat:'labor',catLabel:'Labor',catClass:'tag-labor',pinned:false,title:'Startup withheld 3 months salary citing "performance issues" — no documentation exists',preview:'I worked at a startup for 2 years. Last 3 months no salary. Verbal performance issues never documented in my contract...',author:'Anonymous',initials:'AN',time:'2 hours ago',votes:124,replies:31,views:2400,urgent:true,
+   body:`I've been working at a funded startup for 2 years as a Product Manager. In February, the founder called me and said my performance wasn't meeting expectations. No written warning, no PIP, nothing in writing — just a verbal call.\n\nThey then stopped paying my salary — February, March, and April. When I asked, they said the salary "would be released pending a performance review." My contract has no such clause.\n\nIn May, they sent me a termination letter citing performance and said my unpaid salary would be "offset against notice period." My contract says 1-month notice period, not 3 months.\n\nI have: 2 years of positive annual reviews (in writing), no written performance warning, my employment contract which has no salary withholding clause, and all salary slips showing payment until January.\n\nThis is clearly illegal. What's my best path to recovering ₹3.6 lakhs?`,
+   replies:[
+     {author:'CA Deepak Singh',expert:true,initials:'DS',time:'1.5 hrs ago',text:'Document everything immediately: save all emails, salary slips, annual reviews, and that termination letter. This is a clear violation of the Payment of Wages Act and your employment contract. File with: (1) Labour Commissioner — fastest, free. (2) Send a legal notice demanding payment within 15 days. With ₹3.6L at stake and strong documentation, this should resolve quickly.'},
+     {author:'Adv. Rajesh Sharma',expert:true,initials:'RS',time:'1 hr ago',text:'The "offset against notice period" argument is legally invalid if your contract specifies a 1-month notice period. They cannot invent a 3-month offset. File a labour complaint AND a civil recovery suit simultaneously for maximum pressure. Many startups settle immediately when served a legal notice.'}
+   ]},
+  {id:4,cat:'police',catLabel:'Police & Govt',catClass:'tag-police',pinned:false,title:'Police refusing to register FIR for harassment — told to "resolve it internally"',preview:'Neighbours have been harassing my family with casteist slurs for months. Police at local station told us to settle it ourselves...',author:'Mohan D.',initials:'MD',time:'4 hours ago',votes:201,replies:42,views:3800,urgent:true,
+   body:`My family has been facing continuous harassment from our neighbours for 8 months in our village in Maharashtra. They regularly use casteist slurs, have damaged our crops twice, and last month blocked our water access by cutting the pipe.\n\nWhen we went to the local police station to file an FIR, the SHO told us: "This is a neighbor dispute, resolve it among yourselves." He refused to register an FIR despite us mentioning the SC/ST Prevention of Atrocities Act.\n\nThis has happened 3 times. My family is scared. My elderly parents live there. I live in Pune and am trying to help from here.\n\nWhat can we do when police themselves refuse to help?`,
+   replies:[
+     {author:'Adv. Sandhya Pillai',expert:true,initials:'SP',time:'3 hrs ago',text:'Immediate steps: (1) File a written complaint to the SP (Superintendent of Police) of the district by registered post — police refusing to register an FIR under the SC/ST Atrocities Act is itself a crime. (2) File a complaint with the National Commission for Scheduled Castes. (3) Simultaneously, file a complaint under Sec. 156(3) CrPC before the Judicial Magistrate — the court can order the police to register the FIR. Don\'t stop at the local station.'}
+   ]},
+  {id:5,cat:'womens',catLabel:'Women\'s Safety',catClass:'tag-womens',pinned:true,title:'Stalking and threatening calls from ex — police say nothing they can do until something happens',preview:'My ex-boyfriend has been calling me 20+ times daily, showing up at my workplace, and sending threatening messages for 3 weeks...',author:'Anonymous (F)',initials:'AF',time:'6 hours ago',votes:312,replies:58,views:7200,urgent:true,
+   body:`I broke up with my ex-boyfriend 2 months ago. Since then he has:\n- Called me 20-30 times every single day for 3 weeks\n- Shown up at my workplace twice\n- Followed me to my mother's house\n- Sent messages saying he'll "hurt himself if I don't come back" and messages about what will happen if he finds me with someone else\n\nI went to the police station. The officer told me: "These are personal matters, nothing we can do until something actually happens to you."\n\nI'm terrified. What do I do?`,
+   replies:[
+     {author:'Adv. Meenakshi Iyer',expert:true,initials:'MI',time:'5 hrs ago',text:'The police were WRONG. Stalking is a cognizable offence under IPC Section 354D, punishable with up to 3 years imprisonment for a first offence. You do NOT have to wait until something happens. File an online complaint at cybercrime.gov.in for the calls and messages. Go to the Women\'s Cell of your nearest police district — they handle these differently. Simultaneously, file for a restraining order in civil court.'},
+     {author:'Neha Sood - iCall',expert:true,initials:'NS',time:'4.5 hrs ago',text:'Please save ALL evidence: screenshots of every message, call logs, photos if he\'s shown up anywhere. iCall helpline is 9152987821 — free, confidential. We can also connect you with a safety plan and local women\'s NGOs who can accompany you to the police station, which makes officers take you more seriously. You are not alone in this.'}
+   ]}
+];
+
+const groups = [
+  {id:0,icon:'🏠',name:'Tenant Rights UP',desc:'Share lease issues, fight landlord abuse, understand your rights under UP rent laws. Moderated by practicing lawyers.',members:'4,200',active:'38',posts:'142',mods:3,tags:['Legal','Housing'],
+   pinned:{title:'PINNED: How to file for deposit recovery in UP — step by step guide',link:0},
+   modsData:['Adv. Rajesh Sharma','Legal Aid UP']},
+  {id:1,icon:'♀',name:'Women Speak',desc:'Safe space for women to share harassment, domestic violence, and workplace abuse stories — and find real support, not platitudes.',members:'9,100',active:'120',posts:'407',mods:4,tags:['Harassment','Women'],
+   pinned:{title:'PINNED: Emergency contacts and legal resources for women in crisis',link:5},
+   modsData:['Adv. Meenakshi Iyer','Neha Sood (Counselor)','Dr. Anita Mehra']},
+  {id:2,icon:'✊',name:'Labour Warriors',desc:'Workers sharing salary theft, PF fraud, wrongful termination — with expert legal guidance pinned in every thread.',members:'6,400',active:'74',posts:'289',mods:2,tags:['Labor','Rights'],
+   pinned:{title:'PINNED: Your rights as an employee — simplified for non-lawyers',link:3},
+   modsData:['CA Deepak Singh','Rizwan Khan (Union)']},
+  {id:3,icon:'⚖',name:'Consumer Court Help',desc:'Step-by-step guidance on consumer forum filings, sample complaint templates, and victory stories to keep you motivated.',members:'3,800',active:'29',posts:'98',mods:2,tags:['Consumer','Legal'],
+   pinned:{title:'PINNED: Download our consumer complaint template (works for 80% of cases)',link:2},
+   modsData:['Adv. Vikram Bose','Consumer Rights Volunteer']},
+  {id:4,icon:'📋',name:'RTI Warriors',desc:'How to file RTIs, track responses, escalate to CIC, and use information as a weapon for accountability and change.',members:'2,100',active:'18',posts:'67',mods:2,tags:['RTI','Governance'],
+   pinned:{title:'PINNED: RTI filing checklist — don\'t submit without reading this',link:4},
+   modsData:['Kavita Nair (RTI Expert)','IAS (Retd.) Suresh Nair']},
+  {id:5,icon:'🔊',name:'Dalit Rights Forum',desc:'Caste discrimination, SC/ST Atrocities Act violations, police inaction, and community organizing — expert-moderated.',members:'5,700',active:'61',posts:'214',mods:3,tags:['Dalit','Rights'],
+   pinned:{title:'PINNED: SC/ST Atrocities Act — what it covers and how to file',link:4},
+   modsData:['Adv. Sandhya Pillai (SC)','BAMCEF Representative']},
+  {id:6,icon:'🏥',name:'Medical Rights India',desc:'Patient rights, hospital billing fraud, medical negligence, insurance denial — know what you\'re owed and how to fight for it.',members:'1,900',active:'14',posts:'45',mods:2,tags:['Medical','Consumer'],
+   pinned:{title:'PINNED: Your rights as a patient in India — a quick guide',link:0},
+   modsData:['Dr. Ramesh Kumar','Patient Rights Advocate']},
+  {id:7,icon:'🌱',name:'Environment & Land Rights',desc:'Industrial pollution, illegal construction, forest rights, tribal land displacement — community-powered environmental justice.',members:'1,200',active:'9',posts:'31',mods:1,tags:['Environment','Land'],
+   pinned:{title:'PINNED: How to file environmental complaints with NGT and PCB',link:4},
+   modsData:['Environmental Lawyer (Volunteer)']},
+  {id:8,icon:'📚',name:'Education Rights',desc:'Fee hikes, arbitrary school expulsions, discrimination in admissions, RTE violations — protect your child\'s right to education.',members:'2,800',active:'22',posts:'88',mods:2,tags:['Education','Rights'],
+   pinned:{title:'PINNED: RTE Act explained — what schools must provide free',link:4},
+   modsData:['Education Activist','RTI Specialist']}
+];
+
+const polls_data = [
+  {id:0,q:'Should police officers face criminal charges for custodial deaths, rather than just departmental action?',cat:'Police & Justice',status:'open',opts:[{l:'Yes — criminal charges mandatory',v:7840,voted:false},{l:'No — departmental action is sufficient',v:1240,voted:false},{l:'It depends on the circumstances',v:2100,voted:false}],total:11180,time:'3 hours ago'},
+  {id:1,q:'Has your landlord ever illegally withheld your security deposit?',cat:'Housing & Tenants',status:'open',opts:[{l:'Yes — full deposit withheld',v:5400,voted:false},{l:'Yes — partial deduction without reason',v:3200,voted:false},{l:'No — returned fully',v:2100,voted:false},{l:'Haven\'t rented yet',v:800,voted:false}],total:11500,time:'Yesterday'},
+  {id:2,q:'Do you trust India\'s consumer courts to give fair judgments within a reasonable time?',cat:'Consumer Rights',status:'open',opts:[{l:'Yes, I trust the system',v:1200,voted:false},{l:'Somewhat, but it\'s too slow',v:4800,voted:false},{l:'No, it\'s ineffective',v:5900,voted:false}],total:11900,time:'2 days ago'},
+  {id:3,q:'Should India have a dedicated Fast Track Court for workplace harassment cases?',cat:'Women\'s Safety',status:'open',opts:[{l:'Yes — mandatory within 90 days',v:9200,voted:false},{l:'Yes — but not mandatory',v:1800,voted:false},{l:'Existing courts are enough',v:400,voted:false}],total:11400,time:'3 days ago'},
+  {id:4,q:'In your experience, does the RTI Act actually get citizens useful information?',cat:'RTI & Governance',status:'closed',opts:[{l:'Yes — very effective',v:2100,voted:true},{l:'Sometimes — depends on the department',v:5400,voted:false},{l:'Rarely — too many exemptions',v:3200,voted:false}],total:10700,time:'1 week ago'}
+];
+
+// ============ STATE ============
+let currentExpType = 'all';
+let currentArticleFilter = 'all';
+let currentThread = null;
+let currentGroup = null;
+let myPolls = [...polls_data];
+let toastTimer;
+
+// ============ NAV ============
+function showPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  const nav = document.getElementById('nav-'+page);
+  if(nav) nav.classList.add('active');
+  document.getElementById('navLinks').classList.remove('open');
+  window.scrollTo(0,0);
+  if(page==='articles') renderArticles();
+  if(page==='experts') renderExperts();
+  if(page==='polls') renderPolls();
+  if(page==='forum'){renderThreads();document.getElementById('forumList').style.display='block';document.getElementById('forumThread').style.display='none';}
+  if(page==='community'){document.getElementById('communityGroups').style.display='block';document.getElementById('communityThread').style.display='none';renderGroups();}
+}
+function goHome(){showPage('home')}
+function toggleMenu(){document.getElementById('navLinks').classList.toggle('open')}
+
+// ============ ARTICLES ============
+function renderArticles(){
+  const main = document.getElementById('articlesMain');
+  const filtered = currentArticleFilter==='all' ? articles : articles.filter(a=>a.cat===currentArticleFilter);
+  main.innerHTML = filtered.map(a=>`
+    <div class="article-card-big">
+      <div class="art-tag">${a.tag}</div>
+      <div class="art-title-lg" onclick="openArticle(${a.id})">${a.title}</div>
+      <div class="art-excerpt">${a.excerpt}</div>
+      <div class="art-meta">
+        <span class="art-author">${a.author}</span>
+        <span>${a.date}</span>
+        <span>${a.read} read</span>
+        <span class="art-views">${a.views} reads</span>
+      </div>
+      <div style="margin-top:0.8rem"><span style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);cursor:pointer;font-weight:500" onclick="openArticle(${a.id})">Read full guide →</span></div>
+    </div>`).join('');
+  document.getElementById('articlesList').style.display='block';
+  document.getElementById('articleSingle').style.display='none';
+}
+function filterArticles(btn,cat){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentArticleFilter = cat;
+  renderArticles();
+}
+function openArticle(id){
+  const a = articles[id];
+  document.getElementById('sArtTag').textContent = a.tag;
+  document.getElementById('sArtTitle').textContent = a.title;
+  document.getElementById('sArtAvatar').textContent = a.initials;
+  document.getElementById('sArtAuthor').textContent = a.author;
+  document.getElementById('sArtMeta').textContent = `${a.date} · ${a.read} read · ${a.views} reads`;
+  document.getElementById('sArtBody').innerHTML = a.body;
+  document.getElementById('articlesList').style.display='none';
+  document.getElementById('articleSingle').style.display='block';
+  window.scrollTo(0,0);
+}
+function closeArticle(){
+  document.getElementById('articlesList').style.display='block';
+  document.getElementById('articleSingle').style.display='none';
+}
+
+// ============ EXPERTS ============
+function setExpType(el,type){
+  document.querySelectorAll('.exp-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  currentExpType = type;
+  renderExperts();
+}
+function renderExperts(){
+  const q = (document.getElementById('expertSearch')?.value||'').toLowerCase();
+  const filtered = experts.filter(e=>{
+    const typeMatch = currentExpType==='all' || e.type===currentExpType;
+    const qMatch = !q || e.name.toLowerCase().includes(q) || e.spec.toLowerCase().includes(q) || e.bio.toLowerCase().includes(q) || e.states.toLowerCase().includes(q);
+    return typeMatch && qMatch;
+  });
+  const typeGroups = {all:'All Experts',lawyer:'Lawyers',doctor:'Doctors & Medical Experts',counselor:'Counselors & Mental Health',bureaucrat:'Bureaucrats & Govt Officials',activist:'Activists & NGOs',politician:'Politicians & Elected Representatives',ca:'CAs & Financial Experts',journalist:'Journalists & Media'};
+  let html = '';
+  if(currentExpType==='all'){
+    const types = ['lawyer','doctor','counselor','bureaucrat','activist','politician','ca','journalist'];
+    types.forEach(type=>{
+      const group = filtered.filter(e=>e.type===type);
+      if(!group.length) return;
+      html += `<div style="margin-bottom:2.5rem"><div class="experts-type-header">${typeGroups[type]}</div><div class="experts-subhead">${group.length} verified expert${group.length>1?'s':''} available</div><div class="exp-cards">${group.map(expCard).join('')}</div></div>`;
+    });
+  } else {
+    html = `<div style="margin-bottom:2.5rem"><div class="experts-type-header">${typeGroups[currentExpType]||'Experts'}</div><div class="experts-subhead">${filtered.length} verified expert${filtered.length!==1?'s':''} found</div><div class="exp-cards">${filtered.map(expCard).join('')}</div></div>`;
+  }
+  if(!filtered.length) html = `<div style="padding:3rem;text-align:center;color:var(--muted)">No experts found for your search. <span style="color:var(--accent);cursor:pointer" onclick="document.getElementById('expertSearch').value='';renderExperts()">Clear search</span></div>`;
+  document.getElementById('expertsContent').innerHTML = html;
+}
+function expCard(e){
+  const availColor = e.avail==='now' ? '#27ae60' : '#f39c12';
+  const availText = e.avail==='now' ? 'Available Now' : e.avail==='tom' ? 'Tomorrow' : `Today ${e.avail}`;
+  const dot = e.avail==='now' ? '<span class="dot-green"></span>' : '<span class="dot-yellow"></span>';
+  return `<div class="exp-card" onclick="showToast('Connecting you to ${e.name}...')">
+    <div class="exp-card-top">
+      <div class="exp-avatar">${e.icon}</div>
+      <div>
+        <div class="exp-name">${e.name}</div>
+        <div class="exp-type-badge">${e.spec.split(',')[0]}</div>
+        <div class="exp-avail">${dot} <span style="color:${availColor}">${availText}</span></div>
+      </div>
+    </div>
+    <div class="exp-bio">${e.bio}</div>
+    <div class="exp-tags">${e.tags.map(t=>`<span class="exp-tag">${t}</span>`).join('')}</div>
+    <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.5rem">📍 ${e.states}</div>
+    <div class="exp-card-footer">
+      <span class="exp-rating">${e.rating}</span>
+      <span class="exp-fee">${e.fee}</span>
+      <span class="exp-cta">Connect →</span>
+    </div>
+  </div>`;
+}
+
+// ============ POLLS ============
+function renderPolls(){
+  document.getElementById('pollsList').innerHTML = myPolls.map(p=>pollCard(p)).join('');
+}
+function pollCard(p){
+  const total = p.opts.reduce((s,o)=>s+o.v,0)||1;
+  const hasVoted = p.opts.some(o=>o.voted);
+  const isClosed = p.status==='closed';
+  const optsHtml = p.opts.map((o,i)=>`
+    <div class="poll-option" onclick="${!hasVoted&&!isClosed?`castVote(${p.id},${i})`:''}">
+      <div class="poll-opt-label">
+        <span style="font-weight:${o.voted?'500':'400'}">${o.l}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:0.75rem;${hasVoted||isClosed?'':'color:transparent'}">${Math.round(o.v/total*100)}%</span>
+      </div>
+      <div class="poll-bar-wrap">
+        <div class="poll-bar ${o.voted?'voted':hasVoted?'neutral':''}" style="width:${hasVoted||isClosed?Math.round(o.v/total*100):0}%"></div>
+      </div>
+    </div>`).join('');
+  return `<div class="poll-card">
+    <div class="poll-header">
+      <div class="poll-title">${p.q}</div>
+      <div class="poll-status ${isClosed?'poll-closed':'poll-open'}">${isClosed?'Closed':'Live'}</div>
+    </div>
+    <div class="poll-body">
+      <div style="margin-bottom:0.8rem"><span class="tag-pill tag-legal" style="font-size:0.65rem">${p.cat}</span></div>
+      ${optsHtml}
+      ${!hasVoted&&!isClosed?`<div class="poll-vote-btns"><button class="btn btn-red btn-sm" onclick="castVote(${p.id},0)">Cast Vote</button></div>`:''}
+    </div>
+    <div class="poll-footer">
+      <span>${p.total.toLocaleString()} total votes · ${p.time}</span>
+      <span onclick="showToast('Poll shared!')" style="cursor:pointer;color:var(--accent)">Share →</span>
+    </div>
+  </div>`;
+}
+function castVote(pollId, optIdx){
+  const p = myPolls.find(x=>x.id===pollId);
+  if(!p||p.status==='closed') return;
+  p.opts[optIdx].v += 1;
+  p.opts[optIdx].voted = true;
+  p.total += 1;
+  renderPolls();
+  showToast('Vote cast! Thank you for making your voice heard.');
+}
+function addPollOption(){
+  const wrap = document.getElementById('pollOpts');
+  const div = document.createElement('div');
+  div.className = 'poll-opt-input-row';
+  div.innerHTML = `<input type="text" class="form-input" placeholder="Option ${wrap.children.length+1}">`;
+  wrap.appendChild(div);
+}
+function createPoll(){
+  const q = document.getElementById('pollQ').value.trim();
+  const cat = document.getElementById('pollCat').value;
+  const optEls = document.querySelectorAll('#pollOpts input');
+  const opts = [...optEls].map(i=>i.value.trim()).filter(Boolean);
+  if(!q){showToast('Please enter a question.');return;}
+  if(opts.length<2){showToast('Please add at least 2 options.');return;}
+  const newPoll = {id:myPolls.length,q,cat,status:'open',opts:opts.map(l=>({l,v:0,voted:false})),total:0,time:'Just now'};
+  myPolls.unshift(newPoll);
+  renderPolls();
+  document.getElementById('pollQ').value='';
+  document.querySelectorAll('#pollOpts input').forEach((inp,i)=>{inp.value=i<3?['','',''][i]:''});
+  showToast('Poll published! It is now live for the community.');
+  window.scrollTo(0,300);
+}
+
+// ============ FORUM ============
+function renderThreads(cat='all'){
+  const filtered = cat==='all' ? threads : threads.filter(t=>t.cat===cat);
+  document.getElementById('threadList').innerHTML = filtered.map((t,i)=>`
+    <div class="thread-item" onclick="openThread(${t.id})">
+      <div class="thread-votes">
+        <button class="vote-up" onclick="event.stopPropagation();showToast('Upvoted!')">▲</button>
+        <div class="vote-count">${t.votes}</div>
+        <button class="vote-down" onclick="event.stopPropagation();showToast('Downvoted')">▼</button>
+      </div>
+      <div class="thread-body">
+        <h3>${t.pinned?`<span class="pinned-badge">PINNED</span>`:''}${t.urgent?`<span style="font-size:0.68rem;background:var(--accent);color:white;padding:0.15rem 0.4rem;border-radius:2px;margin-right:0.4rem">URGENT</span>`:''}${t.title}</h3>
+        <div class="thread-preview">${t.preview}</div>
+        <div class="thread-tags"><span class="tag-pill ${t.catClass}" style="font-size:0.65rem">${t.catLabel}</span>${t.replies.some(r=>r.expert)?'<span class="expert-verified">✓ Expert Replied</span>':''}</div>
+        <div class="thread-meta"><span>${t.author}</span><span>${t.time}</span>${t.urgent?'<span class="urgent">Needs Help</span>':''}</div>
+      </div>
+      <div class="thread-stats">
+        <div class="thread-replies">${t.replies.length} replies</div>
+        <div class="thread-views">${t.views.toLocaleString()} views</div>
+      </div>
+    </div>`).join('');
+}
+function setForumCat(el,cat){
+  document.querySelectorAll('.forum-cat-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  renderThreads(cat);
+}
+function setSortBtn(el){
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+function openThread(id){
+  const t = threads[id];
+  currentThread = t;
+  document.getElementById('tdTitle').textContent = t.title;
+  document.getElementById('tdAvatar').textContent = t.initials;
+  document.getElementById('tdAuthor').textContent = t.author;
+  document.getElementById('tdTime').textContent = t.time;
+  document.getElementById('threadBreadCat').textContent = t.catLabel;
+  document.getElementById('threadBreadCat').className = `tag-pill ${t.catClass}`;
+  document.getElementById('tdUrgent').innerHTML = t.urgent ? '<span style="background:var(--accent);color:white;font-size:0.72rem;padding:0.2rem 0.6rem;border-radius:2px">URGENT</span>' : '';
+  document.getElementById('tdBody').innerHTML = t.body.split('\n').map(l=>l.startsWith('-')?`<li style="margin-bottom:0.3rem;margin-left:1.2rem;font-size:0.92rem;line-height:1.75">${l.slice(1).trim()}</li>`:`<p style="margin-bottom:1rem;font-size:0.92rem;line-height:1.75">${l}</p>`).join('');
+  document.getElementById('tdReplies').innerHTML = t.replies.map(r=>`
+    <div class="reply-item">
+      <div class="reply-avatar ${r.expert?'reply-expert':'reply-user'}">${r.initials}</div>
+      <div>
+        <div class="reply-name">${r.author}${r.expert?'<span class="expert-verified">Verified Expert</span>':''}</div>
+        <div class="reply-time">${r.time}</div>
+        ${r.expert?`<div class="expert-reply-wrap"><div class="expert-label">⚖ Expert Legal Advice</div><div class="reply-text">${r.text}</div></div>`:`<div class="reply-text">${r.text}</div>`}
+      </div>
+    </div>`).join('');
+  document.getElementById('forumList').style.display='none';
+  document.getElementById('forumThread').style.display='block';
+  window.scrollTo(0,0);
+}
+function closeThread(){
+  document.getElementById('forumList').style.display='block';
+  document.getElementById('forumThread').style.display='none';
+}
+function showPostForm(){document.getElementById('postModal').classList.add('open')}
+function closePostForm(){document.getElementById('postModal').classList.remove('open')}
+function submitNewPost(){
+  const title = document.getElementById('newPostTitle').value.trim();
+  const body = document.getElementById('newPostBody').value.trim();
+  if(!title||!body){showToast('Please fill in both title and description.');return;}
+  closePostForm();
+  showToast('Problem posted! Experts have been notified. Responses usually arrive within minutes.');
+  document.getElementById('newPostTitle').value='';
+  document.getElementById('newPostBody').value='';
+}
+
+// ============ COMMUNITY ============
+function renderGroups(){
+  document.getElementById('groupsGrid').innerHTML = groups.map(g=>`
+    <div class="group-card" onclick="openGroup(${g.id})">
+      <div class="group-icon">${g.icon}</div>
+      <div class="group-name">${g.name}</div>
+      <div class="group-desc">${g.desc}</div>
+      <div class="group-meta"><span>${g.members} members</span><span>${g.active} active</span></div>
+      <div class="group-tags">${g.tags.map(t=>`<span class="tag-pill tag-legal" style="font-size:0.65rem">${t}</span>`).join('')}</div>
+    </div>`).join('');
+}
+function openGroup(id){
+  const g = groups[id];
+  currentGroup = g;
+  document.getElementById('groupThreadTitle').textContent = g.name;
+  document.getElementById('groupInfoIcon').textContent = g.icon;
+  document.getElementById('groupInfoName').textContent = g.name;
+  document.getElementById('groupInfoDesc').textContent = g.desc;
+  document.getElementById('groupMembers').textContent = g.members;
+  document.getElementById('groupActive').textContent = g.active + ' today';
+  document.getElementById('groupPosts').textContent = g.posts;
+  document.getElementById('groupMods').textContent = g.mods;
+  document.getElementById('pinnedPost').innerHTML = `<div class="pinned-post-label">📌 Pinned</div><h4 onclick="showPage('forum');setTimeout(()=>openThread(${g.pinned.link}),300)">${g.pinned.title}</h4>`;
+  document.getElementById('groupModsList').innerHTML = g.modsData.map(m=>`<div style="font-size:0.82rem;padding:0.3rem 0;border-bottom:1px solid var(--border);color:var(--muted)">${m}</div>`).join('');
+  const groupThreads = threads.filter((t,i)=>i%2===id%2||i===id%threads.length).concat(threads.slice(0,3));
+  document.getElementById('groupThreadsList').innerHTML = groupThreads.slice(0,6).map(t=>`
+    <div class="thread-item" onclick="showPage('forum');setTimeout(()=>openThread(${t.id}),300)" style="grid-template-columns:auto 1fr">
+      <div class="thread-votes">
+        <button class="vote-up" onclick="event.stopPropagation();showToast('Upvoted!')">▲</button>
+        <div class="vote-count">${t.votes}</div>
+        <button class="vote-down" onclick="event.stopPropagation()">▼</button>
+      </div>
+      <div class="thread-body">
+        <h3>${t.urgent?`<span style="font-size:0.65rem;background:var(--accent);color:white;padding:0.12rem 0.35rem;border-radius:2px;margin-right:0.3rem">URGENT</span>`:''}${t.title}</h3>
+        <div class="thread-preview">${t.preview}</div>
+        <div class="thread-meta"><span>${t.author}</span><span>${t.time}</span><span>${t.replies.length} replies</span></div>
+      </div>
+    </div>`).join('');
+  document.getElementById('communityGroups').style.display='none';
+  document.getElementById('communityThread').style.display='block';
+  window.scrollTo(0,0);
+}
+function closeGroupThread(){
+  document.getElementById('communityGroups').style.display='block';
+  document.getElementById('communityThread').style.display='none';
+}
+
+// ============ TOAST ============
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.style.display='none', 3500);
+}
+
+// ============ INIT ============
+renderArticles();
+renderExperts();
+renderPolls();
+renderThreads();
+renderGroups();
+
+// Close modals on backdrop click
+document.getElementById('postModal').addEventListener('click',function(e){if(e.target===this)closePostForm()});
+</script>
+</body>
+</html>
